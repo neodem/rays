@@ -3,8 +3,7 @@ package com.neodem.graphics.dd.engine.sprite.sprites;
 import java.awt.Graphics;
 
 import com.neodem.graphics.dd.engine.common.Color;
-
-
+import com.neodem.graphics.dd.engine.core.Sprite2D;
 
 
 public class RectangleSprite extends Sprite2D {
