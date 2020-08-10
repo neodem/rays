@@ -22,22 +22,27 @@ public class RaysCanvas extends ActiveCanvas {
     private final int screenH;
     private final int screenMid;
 
-    private final Color bgColor;
     protected List<Paintable> rays;
 
     protected WorldMap worldMap;
+
+    protected float playerLocX;
+    protected float playerLocY;
+    protected float playerViewAngle;
 
     public RaysCanvas(int width, int height) {
         super(new Dimension(width, height));
         this.screenW = width;
         this.screenH = height;
         this.screenMid = screenH / 2;
-        this.bgColor = Color.lightGray;
     }
 
     @Override
     public void init() {
         worldMap = new TestWorldMap();
+        playerLocX = 7.5f;
+        playerLocY = 13.5f;
+        playerViewAngle = 0;
     }
 
     @Override
@@ -55,6 +60,8 @@ public class RaysCanvas extends ActiveCanvas {
         rays = new ArrayList<>();
 
         for (int locX = 0; locX < screenW; locX++) {
+
+
             rays.add(new Ray(random.nextInt(300), locX, screenMid, Color.white));
         }
     }
