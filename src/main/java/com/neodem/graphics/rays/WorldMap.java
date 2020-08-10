@@ -17,7 +17,20 @@ import java.util.Map;
  * Created by Vincent Fumo (neodem@gmail.com)
  * Created on 8/10/20
  */
+
 public class WorldMap {
+
+    /**
+     * return the distance to the element we hit or null
+     *
+     * @param playerLocX
+     * @param playerLocY
+     * @param angleOffset
+     * @return
+     */
+    public Float intersectElement(float playerLocX, float playerLocY, float angleOffset) {
+        return 0f;
+    }
 
     public enum ElementType {
         VWALL, HWALL

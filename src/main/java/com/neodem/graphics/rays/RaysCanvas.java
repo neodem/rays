@@ -20,7 +20,11 @@ public class RaysCanvas extends ActiveCanvas {
 
     private final int screenW;
     private final int screenH;
-    private final int screenMid;
+    private final int screenHMid;
+    private final int screenWMid;
+
+    // in degrees
+    private static final int VIEWPORT = 64;
 
     protected List<Paintable> rays;
 
@@ -30,11 +34,15 @@ public class RaysCanvas extends ActiveCanvas {
     protected float playerLocY;
     protected float playerViewAngle;
 
+    private final float angleTick;
+
     public RaysCanvas(int width, int height) {
         super(new Dimension(width, height));
         this.screenW = width;
         this.screenH = height;
-        this.screenMid = screenH / 2;
+        this.screenHMid = screenH / 2;
+        this.screenWMid = screenW / 2;
+        this.angleTick = VIEWPORT / screenW;
     }
 
     @Override
@@ -59,11 +67,30 @@ public class RaysCanvas extends ActiveCanvas {
     private void computeRays() {
         rays = new ArrayList<>();
 
-        for (int locX = 0; locX < screenW; locX++) {
-
-
-            rays.add(new Ray(random.nextInt(300), locX, screenMid, Color.white));
+        // left view
+        for (int locX = 0; locX < screenWMid; locX++) {
+            float angleOffset = playerViewAngle - (angleTick * (screenWMid - locX));
+            int height = computeRay(angleOffset, playerLocX, playerLocY);
+            rays.add(new Ray(height, locX, screenHMid, Color.white));
         }
+
+        // right view
+        for (int locX = screenWMid; locX < screenW; locX++) {
+            float angleOffset = playerViewAngle + (angleTick * locX);
+            int height = computeRay(angleOffset, playerLocX, playerLocY);
+            rays.add(new Ray(height, locX, screenHMid, Color.white));
+        }
+    }
+
+    private int computeRay(float angleOffset, float playerLocX, float playerLocY) {
+        Float distance = worldMap.intersectElement(playerLocX, playerLocY, angleOffset);
+
+        // should relate the distance to the height.. with a close distance = max height and
+        // a far distance being a small height
+        int height = random.nextInt(300);
+
+
+        return height;
     }
 
     private void drawRays(List<Paintable> rays, Graphics g) {
@@ -77,7 +104,7 @@ public class RaysCanvas extends ActiveCanvas {
 
         // roof
         g.setColor(Color.lightBlue.getAWTColor());
-        g.fillRect(0, 0, screenW, screenMid);
+        g.fillRect(0, 0, screenW, screenHMid);
     }
 
 
