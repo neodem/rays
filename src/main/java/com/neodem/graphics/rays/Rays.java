@@ -8,8 +8,8 @@ import com.neodem.graphics.dd.engine.core.AppFrame;
  * Created on 8/9/20
  */
 public class Rays {
-    private static final int APP_WIDTH = 800;
-    private static final int APP_HEIGHT = 600;
+    private static final int APP_WIDTH = 640;
+    private static final int APP_HEIGHT = 480;
     private static final String APP_NAME = "Rays";
 
     private Rays() {

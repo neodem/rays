@@ -31,7 +31,7 @@ public class StandaloneApplet extends Applet {
 
 	static public void main(String argv[]) {
 		final Applet applet = new StandaloneApplet();
-		System.runFinalizersOnExit(true);
+		//System.runFinalizersOnExit(true);
 		Frame frame = new Frame("MyApplet");
 		frame.addWindowListener(new WindowAdapter() {
 			public void windowClosing(WindowEvent event) {

@@ -8,7 +8,7 @@ import java.awt.Graphics;
  *
  * @author Vince
  */
-public abstract class Sprite implements GraphicalObject {
+public abstract class Sprite implements Paintable, Updateable {
 
     protected boolean visible;
 

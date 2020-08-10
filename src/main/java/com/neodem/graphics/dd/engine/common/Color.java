@@ -81,7 +81,7 @@ public class Color extends AbstractGameObject {
 	/**
 	 * @return Returns the baseColor.
 	 */
-	public java.awt.Color getAWTColor() {
+	public java.awt.Color  getAWTColor() {
 		return baseColor;
 	}
 	
