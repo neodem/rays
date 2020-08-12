@@ -12,15 +12,9 @@ public class Ray {
     // origin of the ray in the coordinate system of the World
     private final FloatingPoint origin;
 
-    // the angle of the ray in thousanths. 0 is directly up. As in 32 degrees = 32000
-    private final int angle;
+    private final float angle;
 
-    private final Orientation orientationUpDown;
-    private final Orientation orientationRightLeft;
-
-    protected enum Orientation {
-        UP, DOWN, RIGHT, LEFT, BOTH;
-    }
+    private final Quadrant quadrant;
 
     public Ray(FloatingPoint origin, float angle) {
         if (origin == null) throw new IllegalArgumentException("origin may not be null");
@@ -28,15 +22,9 @@ public class Ray {
 
         if (angle < 0) throw new IllegalArgumentException("angle needs to be 0-359");
         if (angle > 359) throw new IllegalArgumentException("angle needs to be 0-359");
-        this.angle = (int) angle * 1000;
+        this.angle = angle;
 
-        if ((angle > 270) || (angle < 90)) orientationUpDown = Orientation.UP;
-        else if ((angle > 90) || (angle < 270)) orientationUpDown = Orientation.DOWN;
-        else orientationUpDown = Orientation.BOTH;
-
-        if ((angle > 0) || (angle < 180)) orientationRightLeft = Orientation.RIGHT;
-        else if ((angle > 180) || (angle < 360)) orientationRightLeft = Orientation.LEFT;
-        else orientationRightLeft = Orientation.BOTH;
+        this.quadrant = AngleHelpers.determineQuadrant(angle);
     }
 
     /**
@@ -47,11 +35,28 @@ public class Ray {
      */
     public List<FloatingPoint> intersectHorizontal(int max) {
         List<FloatingPoint> points = new ArrayList<>();
-        float d = getDistanceToClosestHorizontal(origin.getY(), orientationUpDown);
-        if (Float.isFinite(d)) {
-            float localAngle = angle;
-            if (angle > 180) localAngle = localAngle - 360;
+
+        float dh = getDistanceToClosestHorizontal(origin.getY(), AngleHelpers.orientUpDown(quadrant));
+        float dv = getDistanceToClosestVertical(origin.getX(), AngleHelpers.orientRightLeft(quadrant));
+
+        if(quadrant == Quadrant.UP_LEFT) {
+             // compute first point!
+
+            // closest horizontal is up
+            int y = (int) origin.getY();
+
+            // closest vertical is to the left
+            int cv = (int) origin.getX();
+
+            // angle off the axis
+            float localAngle = 360 - angle;
+
             double tan = Math.tan(Math.toRadians(localAngle));
+
+            float x = (float) (tan * dh) + cv;
+
+            points.add(new FloatingPoint(x,y));
+
         }
 
         return points;
@@ -65,7 +70,7 @@ public class Ray {
      * @return
      */
     public float getDistanceToClosestHorizontal(float y, Orientation orientation) {
-        if (orientation == Orientation.BOTH) return Float.POSITIVE_INFINITY;
+        if (orientation == Orientation.NA) return Float.POSITIVE_INFINITY;
         if (orientation == Orientation.UP) {
             return y - (int) y;
         } else {
@@ -81,7 +86,7 @@ public class Ray {
      * @return
      */
     public float getDistanceToClosestVertical(float x, Orientation orientation) {
-        if (orientation == Orientation.BOTH) return Float.POSITIVE_INFINITY;
+        if (orientation == Orientation.NA) return Float.POSITIVE_INFINITY;
         if (orientation == Orientation.RIGHT) {
             return (int) x - x + 1;
         } else {
@@ -99,4 +104,15 @@ public class Ray {
         return null;
     }
 
+    public FloatingPoint getOrigin() {
+        return origin;
+    }
+
+    public float getAngle() {
+        return angle;
+    }
+
+    public Quadrant getQuadrant() {
+        return quadrant;
+    }
 }
