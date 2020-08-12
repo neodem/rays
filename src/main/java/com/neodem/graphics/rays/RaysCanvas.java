@@ -30,8 +30,7 @@ public class RaysCanvas extends ActiveCanvas {
 
     protected WorldMap worldMap;
 
-    protected float playerLocX;
-    protected float playerLocY;
+    protected FloatingPoint playerLocation;
     protected float playerViewAngle;
 
     private final float angleTick;
@@ -48,8 +47,7 @@ public class RaysCanvas extends ActiveCanvas {
     @Override
     public void init() {
         worldMap = new TestWorldMap();
-        playerLocX = 7.5f;
-        playerLocY = 13.5f;
+        playerLocation = new FloatingPoint(7.5f, 13.5f);
         playerViewAngle = 0;
     }
 
@@ -70,20 +68,20 @@ public class RaysCanvas extends ActiveCanvas {
         // left view
         for (int locX = 0; locX < screenWMid; locX++) {
             float angleOffset = playerViewAngle - (angleTick * (screenWMid - locX));
-            int height = computeRay(angleOffset, playerLocX, playerLocY);
-            rays.add(new Ray(height, locX, screenHMid, Color.white));
+            int height = computeRay(angleOffset, playerLocation);
+            rays.add(new PaintableRay(height, locX, screenHMid, Color.white));
         }
 
         // right view
         for (int locX = screenWMid; locX < screenW; locX++) {
             float angleOffset = playerViewAngle + (angleTick * locX);
-            int height = computeRay(angleOffset, playerLocX, playerLocY);
-            rays.add(new Ray(height, locX, screenHMid, Color.white));
+            int height = computeRay(angleOffset, playerLocation);
+            rays.add(new PaintableRay(height, locX, screenHMid, Color.white));
         }
     }
 
-    private int computeRay(float angleOffset, float playerLocX, float playerLocY) {
-        Float distance = worldMap.intersectElement(playerLocX, playerLocY, angleOffset);
+    private int computeRay(float angleOffset, FloatingPoint playerLocation) {
+      //  Float distance = worldMap.intersectElement(playerLocX, playerLocY, angleOffset);
 
         // should relate the distance to the height.. with a close distance = max height and
         // a far distance being a small height
