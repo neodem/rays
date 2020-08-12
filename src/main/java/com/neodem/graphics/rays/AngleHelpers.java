@@ -55,6 +55,47 @@ public class AngleHelpers {
      * <p>
      * Horizontal in this case means the first (and subsequent) whole X value axises
      *
+     * @param numToCompute   the number of points to compute (>0)
+     * @param angle  from 0-90
+     * @return a List with the origin first and up to max points after (so the size is 1+numToCompute)
+     */
+    public static List<FloatingPoint> intersectHorizontalPure(float angle, int numToCompute) {
+        if (numToCompute <= 0) throw new IllegalArgumentException("numToCompute needs to be gt 0");
+        if (angle < 0) throw new IllegalArgumentException("angle should be positive");
+        if (angle > 90) throw new IllegalArgumentException("angle may not be greater than 90");
+
+        List<FloatingPoint> points = new ArrayList<>();
+        points.add(new FloatingPoint());
+
+        // compute first point!
+        float x = 1;
+        double tan = Math.tan(Math.toRadians(angle));
+        float y = (float) (tan);
+
+        FloatingPoint firstPoint = new FloatingPoint(x, y);
+        points.add(firstPoint);
+
+        // compute other points
+        if (numToCompute > 1) {
+            FloatingPoint previousPoint = firstPoint;
+            for (int i = 0; i < numToCompute - 1; i++) {
+                float newX = previousPoint.getX() + 1;
+                float newY = (float) (previousPoint.getY() + tan);
+                previousPoint = new FloatingPoint(newX, newY);
+                points.add(previousPoint);
+            }
+        }
+
+        return points;
+    }
+
+    /**
+     * will compute the points based on a traditional X/Y graph with the origin of the graph at the bottom left and
+     * Y going up and X going Right. Angles are in degrees going up to 90 with 0 being aligned with the X axis
+     * and 90 being aligned with the Y axis
+     * <p>
+     * Horizontal in this case means the first (and subsequent) whole X value axises
+     *
      * @param size   the number of points to compute (>0)
      * @param angle  from 0-90
      * @param origin the starting point ( must be at 0,0 or greater)

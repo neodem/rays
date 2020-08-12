@@ -19,7 +19,7 @@ public class RayTest {
 
     @Before
     public void setUp() throws Exception {
-        ray = new Ray(new FloatingPoint(7.25f, 13.25f), 328);
+        ray = new Ray(new FloatingPoint(7.5f, 13.5f), 328);
     }
 
     @After

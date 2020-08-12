@@ -9,6 +9,11 @@ public class FloatingPoint {
     private final float x;
     private final float y;
 
+    public FloatingPoint() {
+        this.x = 0f;
+        this.y = 0f;
+    }
+
     public FloatingPoint(float x, float y) {
         this.x = x;
         this.y = y;

@@ -26,6 +26,18 @@ public class AngleHelpersTest {
     }
 
     @Test
+    public void intersectHorizontalPureShouldComputePointsCorrectly() {
+        List<FloatingPoint> floatingPoints = AngleHelpers.intersectHorizontalPure(32, 2);
+        assertThat(floatingPoints).hasSize(3);
+        assertThat(floatingPoints.get(0).getX()).isCloseTo(0f, Offset.offset(.00001f));
+        assertThat(floatingPoints.get(0).getY()).isCloseTo(0f, Offset.offset(.00001f));
+        assertThat(floatingPoints.get(1).getX()).isCloseTo(1f, Offset.offset(.00001f));
+        assertThat(floatingPoints.get(1).getY()).isCloseTo(.62486935f, Offset.offset(.00001f));
+        assertThat(floatingPoints.get(2).getX()).isCloseTo(2f, Offset.offset(.00001f));
+        assertThat(floatingPoints.get(2).getY()).isCloseTo(1.2497387f, Offset.offset(.00001f));
+    }
+
+    @Test
     public void intersectVerticalShouldComputePointsCorrectly() {
         List<FloatingPoint> floatingPoints = AngleHelpers.intersectVertical(new FloatingPoint(.2f, .2f), 22, 2);
         assertThat(floatingPoints).hasSize(3);
