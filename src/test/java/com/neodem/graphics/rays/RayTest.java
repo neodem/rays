@@ -36,9 +36,9 @@ public class RayTest {
     public void intersectHorizontalShouldComputeCorrectFirstPointAndSecondPointCorrectly() {
         List<FloatingPoint> floatingPoints = ray.intersectHorizontal(2);
         assertThat(floatingPoints).hasSize(2);
-        assertThat(floatingPoints.get(0).getX()).isCloseTo(7.3124347f, Offset.offset(.00001f));
+        assertThat(floatingPoints.get(0).getX()).isCloseTo(7.188f, Offset.offset(.00001f));
         assertThat(floatingPoints.get(0).getY()).isCloseTo(13f, Offset.offset(.00001f));
-        assertThat(floatingPoints.get(1).getX()).isCloseTo(6.5626959f, Offset.offset(.00001f));
+        assertThat(floatingPoints.get(1).getX()).isCloseTo(6.876f, Offset.offset(.00001f));
         assertThat(floatingPoints.get(1).getY()).isCloseTo(12f, Offset.offset(.00001f));
     }
 
