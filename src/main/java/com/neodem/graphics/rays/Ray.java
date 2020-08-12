@@ -34,29 +34,44 @@ public class Ray {
      * @return the intersections with the 0 index being the first one, then outwards
      */
     public List<FloatingPoint> intersectHorizontal(int max) {
+
         List<FloatingPoint> points = new ArrayList<>();
+        if (max < 0) throw new IllegalArgumentException("max needs to be positive");
 
-        float dh = getDistanceToClosestHorizontal(origin.getY(), AngleHelpers.orientUpDown(quadrant));
-        float dv = getDistanceToClosestVertical(origin.getX(), AngleHelpers.orientRightLeft(quadrant));
+        if (max > 0) {
 
-        if(quadrant == Quadrant.UP_LEFT) {
-             // compute first point!
+            float dh = getDistanceToClosestHorizontal(origin.getY(), AngleHelpers.orientUpDown(quadrant));
+            float dv = getDistanceToClosestVertical(origin.getX(), AngleHelpers.orientRightLeft(quadrant));
 
-            // closest horizontal is up
-            int y = (int) origin.getY();
+            if (quadrant == Quadrant.UP_LEFT) {
+                // compute first point!
 
-            // closest vertical is to the left
-            int cv = (int) origin.getX();
+                // closest horizontal is up
+                int y = (int) origin.getY();
 
-            // angle off the axis
-            float localAngle = 360 - angle;
+                // closest vertical is to the left
+                int cv = (int) origin.getX();
 
-            double tan = Math.tan(Math.toRadians(localAngle));
+                // angle off the axis
+                float localAngle = 360 - angle;
 
-            float x = (float) (tan * dh) + cv;
+                double tan = Math.tan(Math.toRadians(localAngle));
 
-            points.add(new FloatingPoint(x,y));
+                float x = (float) (tan * dh) + cv;
 
+                FloatingPoint firstPoint = new FloatingPoint(x, y);
+                points.add(firstPoint);
+
+                FloatingPoint previousPoint = firstPoint;
+                if (max > 1) {
+                    for (int i = 0; i < max; i++) {
+                        float newX = (float) (previousPoint.getX() - tan);
+                        float newY = previousPoint.getY() - 1;
+                        previousPoint = new FloatingPoint(newX, newY);
+                        points.add(previousPoint);
+                    }
+                }
+            }
         }
 
         return points;

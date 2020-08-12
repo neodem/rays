@@ -19,7 +19,7 @@ public class RayTest {
 
     @Before
     public void setUp() throws Exception {
-        ray = new Ray(new FloatingPoint(7.5f, 13.5f), 328);
+        ray = new Ray(new FloatingPoint(7.25f, 13.25f), 328);
     }
 
     @After
@@ -33,10 +33,13 @@ public class RayTest {
     }
 
     @Test
-    public void intersectHorizontalShouldComputeCorrectFirstPoint() {
-        List<FloatingPoint> floatingPoints = ray.intersectHorizontal(1);
+    public void intersectHorizontalShouldComputeCorrectFirstPointAndSecondPointCorrectly() {
+        List<FloatingPoint> floatingPoints = ray.intersectHorizontal(2);
+        assertThat(floatingPoints).hasSize(2);
         assertThat(floatingPoints.get(0).getX()).isCloseTo(7.3124347f, Offset.offset(.00001f));
         assertThat(floatingPoints.get(0).getY()).isCloseTo(13f, Offset.offset(.00001f));
+        assertThat(floatingPoints.get(1).getX()).isCloseTo(6.5626959f, Offset.offset(.00001f));
+        assertThat(floatingPoints.get(1).getY()).isCloseTo(12f, Offset.offset(.00001f));
     }
 
     @Test
