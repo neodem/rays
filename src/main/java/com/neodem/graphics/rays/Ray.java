@@ -43,10 +43,10 @@ public class Ray {
 
         if (quadrant == Quadrant.UP_LEFT) {
             // get the points in a XY coord system
-            List<FloatingPoint> floatingPoints = AngleHelpers.intersectHorizontal(new FloatingPoint(1-dv, 1-dh), 360 - angle, numberToCompute);
+            List<FloatingPoint> floatingPoints = AngleHelpers.intersectHorizontal(new FloatingPoint(1 - dv, 1 - dh), 360 - angle, numberToCompute);
 
             // transpose the points
-            points = transpose(floatingPoints, originWorld);
+            points = transposeUpLeft(floatingPoints, originWorld);
         }
 
 //            if (max > 0) {
@@ -96,18 +96,18 @@ public class Ray {
         return points;
     }
 
-    protected List<FloatingPoint> transpose(List<FloatingPoint> floatingPoints, FloatingPoint worldOrigin) {
+    protected List<FloatingPoint> transposeUpLeft(List<FloatingPoint> floatingPoints, FloatingPoint worldOrigin) {
         if (floatingPoints == null) return null;
 
         List<FloatingPoint> result = new ArrayList<>();
-        if(floatingPoints.size() == 0) return result;
+        if (floatingPoints.size() == 0) return result;
 
         float originX = worldOrigin.getX();
         float originY = worldOrigin.getY();
 
-        for(int i=0; i< floatingPoints.size(); i++) {
+        for (int i = 0; i < floatingPoints.size(); i++) {
             FloatingPoint fp0 = floatingPoints.get(i);
-            FloatingPoint fp1 = floatingPoints.get(i+1);
+            FloatingPoint fp1 = floatingPoints.get(i + 1);
 
             float dx = fp1.getX() - fp0.getX();
             float dy = fp1.getY() - fp0.getY();
