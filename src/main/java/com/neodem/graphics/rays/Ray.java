@@ -10,15 +10,16 @@ import java.util.List;
 public class Ray {
 
     // origin of the ray in the coordinate system of the World
-    private final FloatingPoint originWorld;
+    private final FloatingPoint rayOrigin;
 
+    // angle is 0-359 with 0 being UP and 180 being DOWN
     private final float angle;
 
     private final Quadrant quadrant;
 
     public Ray(FloatingPoint origin, float angle) {
         if (origin == null) throw new IllegalArgumentException("origin may not be null");
-        this.originWorld = origin;
+        this.rayOrigin = origin;
 
         if (angle < 0) throw new IllegalArgumentException("angle needs to be 0-359");
         if (angle > 359) throw new IllegalArgumentException("angle needs to be 0-359");
@@ -27,110 +28,96 @@ public class Ray {
         this.quadrant = AngleHelpers.determineQuadrant(angle);
     }
 
+    @Override
+    public String toString() {
+        return "Ray{" +
+                "rayOrigin=" + rayOrigin +
+                ", angle=" + angle +
+                ", quadrant=" + quadrant +
+                '}';
+    }
+
     /**
-     * compute all the point where this ray intersects the world map on the horizontal axis
+     * compute all the points where this ray intersects the world map on its horizontal axis'
      *
      * @param numberToCompute the number of intersecting points to compute
      * @return the intersections with the 0 index being the origin of the ray
      */
     public List<FloatingPoint> intersectHorizontal(int numberToCompute) {
-
-        List<FloatingPoint> points = new ArrayList<>();
         if (numberToCompute <= 0) throw new IllegalArgumentException("numberToCompute needs to be greater than 0");
 
-        float dh = getDistanceToClosestHorizontal(originWorld.getY(), AngleHelpers.orientUpDown(quadrant));
-        float dv = getDistanceToClosestVertical(originWorld.getX(), AngleHelpers.orientRightLeft(quadrant));
+        List<FloatingPoint> points = new ArrayList<>();
 
+        float dh = getDistanceToClosestHorizontal(rayOrigin.getY(), AngleHelpers.orientUpDown(quadrant));
+
+        float localOriginX = 0;
+        float localAngle = 0;
         if (quadrant == Quadrant.UP_LEFT) {
-            // get the points in a XY coord system
-            List<FloatingPoint> floatingPoints = AngleHelpers.intersectHorizontal(new FloatingPoint(1 - dv, 1 - dh), 360 - angle, numberToCompute);
-
-            // transpose the points
-            points = transposeUpLeft(floatingPoints, originWorld);
+            localOriginX = 1 - dh;
+            localAngle = 360 - angle;
+        } else if (quadrant == Quadrant.UP_RIGHT) {
+            localOriginX = 1 - dh;
+            localAngle = angle;
+        } else if (quadrant == Quadrant.DOWN_LEFT) {
+            localOriginX = dh;
+            localAngle = angle - 180;
         }
 
-//            if (max > 0) {
-//
-//            float dh = getDistanceToClosestHorizontal(origin.getY(), AngleHelpers.orientUpDown(quadrant));
-//            float dv = getDistanceToClosestVertical(origin.getX(), AngleHelpers.orientRightLeft(quadrant));
-//
-//            if (quadrant == Quadrant.UP_LEFT) {
-//
-//                // get the points in a XY coord system
-//                List<FloatingPoint> floatingPoints = AngleHelpers.intersectHorizontal(new FloatingPoint(), 360 - angle, numberToCompute);
-//
-//                // transpose the points
-//                points = transpose(floatingPoints);
-//
-//
-//                // compute first point!
-//
-//                // closest horizontal is up
-//                int y = (int) origin.getY();
-//
-//                // closest vertical is to the left
-//                int cv = (int) origin.getX();
-//
-//                // angle off the axis
-//                float localAngle = 360 - angle;
-//
-//                double tan = Math.tan(Math.toRadians(localAngle));
-//
-//                float x = (float) (tan * dh) + cv;
-//
-//                FloatingPoint firstPoint = new FloatingPoint(x, y);
-//                points.add(firstPoint);
-//
-//                FloatingPoint previousPoint = firstPoint;
-//                if (max > 1) {
-//                    for (int i = 0; i < max; i++) {
-//                        float newX = (float) (previousPoint.getX() - tan);
-//                        float newY = previousPoint.getY() - 1;
-//                        previousPoint = new FloatingPoint(newX, newY);
-//                        points.add(previousPoint);
-//                    }
-//                }
-//            }
-//        }
+
+        List<Float> yValues = AngleHelpers.intersectVertical(localOriginX, localAngle, numberToCompute);
+
+        if (quadrant == Quadrant.UP_LEFT) {
+            points = makePointsFromOriginUpLeft(rayOrigin, yValues);
+        } else if (quadrant == Quadrant.UP_RIGHT) {
+            points = makePointsFromOriginUpRight(rayOrigin, yValues);
+        } else if (quadrant == Quadrant.DOWN_LEFT) {
+            points = makePointsFromOriginDownLeft(rayOrigin, yValues);
+        }
 
         return points;
     }
 
-    protected List<FloatingPoint> transposeUpLeft(List<FloatingPoint> floatingPoints, FloatingPoint worldOrigin) {
-        if (floatingPoints == null) return null;
+    protected List<FloatingPoint> makePointsFromOriginDownLeft(FloatingPoint worldOrigin, List<Float> offsets) {
+        if (offsets == null) return null;
 
         List<FloatingPoint> result = new ArrayList<>();
-        if (floatingPoints.size() == 0) return result;
 
-        float originX = worldOrigin.getX();
-        float originY = worldOrigin.getY();
+        int y = (int) worldOrigin.getY();
+        float xBase = worldOrigin.getX();
 
-        for (int i = 0; i < floatingPoints.size(); i++) {
-            FloatingPoint fp0 = floatingPoints.get(i);
-            FloatingPoint fp1 = floatingPoints.get(i + 1);
-
-            float dx = fp1.getX() - fp0.getX();
-            float dy = fp1.getY() - fp0.getY();
-
-            float newX = originX - dy;
-            float newY = originY - dx;
-
-            result.add(new FloatingPoint(newX, newY));
-
-            originX = newX;
-            originY = newY;
+        for (Float offset : offsets) {
+            result.add(new FloatingPoint(xBase - offset, ++y));
         }
 
-//        for (FloatingPoint xypoint : floatingPoints) {
-//
-//            float x = xypoint.getX();
-//            float y = xypoint.getY();
-//
-//            float newX = y + originX;
-//            float newY = x + originY;
-//
-//            result.add(new FloatingPoint(newX, newY));
-//        }
+        return result;
+    }
+
+    protected List<FloatingPoint> makePointsFromOriginUpLeft(FloatingPoint worldOrigin, List<Float> offsets) {
+        if (offsets == null) return null;
+
+        List<FloatingPoint> result = new ArrayList<>();
+
+        int y = (int) worldOrigin.getY();
+        float xBase = worldOrigin.getX();
+
+        for (Float offset : offsets) {
+            result.add(new FloatingPoint(xBase - offset, y--));
+        }
+
+        return result;
+    }
+
+    protected List<FloatingPoint> makePointsFromOriginUpRight(FloatingPoint worldOrigin, List<Float> offsets) {
+        if (offsets == null) return null;
+
+        List<FloatingPoint> result = new ArrayList<>();
+
+        int y = (int) worldOrigin.getY();
+        float xBase = worldOrigin.getX();
+
+        for (Float offset : offsets) {
+            result.add(new FloatingPoint(xBase + offset, y--));
+        }
 
         return result;
     }
@@ -178,7 +165,7 @@ public class Ray {
     }
 
     public FloatingPoint getOrigin() {
-        return originWorld;
+        return rayOrigin;
     }
 
     public float getAngle() {

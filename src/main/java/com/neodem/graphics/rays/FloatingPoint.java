@@ -14,6 +14,11 @@ public class FloatingPoint {
         this.y = 0f;
     }
 
+    @Override
+    public String toString() {
+        return "(" + x + "," + y + ")";
+    }
+
     public FloatingPoint(float x, float y) {
         this.x = x;
         this.y = y;
