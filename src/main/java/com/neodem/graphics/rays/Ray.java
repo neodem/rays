@@ -22,6 +22,10 @@ public class Ray {
 
     private final Quadrant quadrant;
 
+    public Ray(float x, float y, float angle) {
+        this(new FloatingPoint(x, y), angle);
+    }
+
     public Ray(FloatingPoint origin, float angle) {
         if (origin == null) throw new IllegalArgumentException("origin may not be null");
         this.rayOrigin = origin;

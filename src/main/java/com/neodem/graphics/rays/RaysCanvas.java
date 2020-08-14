@@ -53,7 +53,7 @@ public class RaysCanvas extends ActiveCanvas {
 
     @Override
     public void update(long elapsedTime) {
-        computeRays();
+        makeRays();
     }
 
     @Override
@@ -62,7 +62,7 @@ public class RaysCanvas extends ActiveCanvas {
         drawRays(rays, g);
     }
 
-    private void computeRays() {
+    private void makeRays() {
         rays = new ArrayList<>();
 
         // left view
