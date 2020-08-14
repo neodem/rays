@@ -32,4 +32,14 @@ public class AnglesTest {
         assertThat(yValues.get(2)).isCloseTo(1.2120787f, Offset.offset(.00001f));
         assertThat(yValues.get(3)).isCloseTo(1.616105f, Offset.offset(.00001f));
     }
+
+    @Test
+    public void intersectHorizontalShouldComputeCorrectly() {
+        List<Float> xValues = Angles.intersectHorizontal(.5f, 22, 4);
+        assertThat(xValues).hasSize(4);
+        assertThat(xValues.get(0)).isCloseTo(1.2375435f, Offset.offset(.00001f));
+        assertThat(xValues.get(1)).isCloseTo(3.7126303f, Offset.offset(.00001f));
+        assertThat(xValues.get(2)).isCloseTo(6.187717f, Offset.offset(.00001f));
+        assertThat(xValues.get(3)).isCloseTo(8.662804f, Offset.offset(.00001f));
+    }
 }

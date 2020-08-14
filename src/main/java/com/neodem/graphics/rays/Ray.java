@@ -43,12 +43,12 @@ public class Ray {
     }
 
     /**
-     * compute all the points where this ray intersects the world map on its horizontal axis'
+     * compute all the points where this ray intersects the world map on its horizontal axis' (axi?)
      *
      * @param numberToCompute the number of intersecting points to compute
      * @return the intersections found
      */
-    public List<FloatingPoint> intersectHorizontal(int numberToCompute) {
+    public List<FloatingPoint> intersectWorldHorizontal(int numberToCompute) {
         if (numberToCompute <= 0) throw new IllegalArgumentException("numberToCompute needs to be greater than 0");
 
         List<FloatingPoint> points = new ArrayList<>();
@@ -61,7 +61,6 @@ public class Ray {
         float yBase = rayOrigin.getY();
         float xBase = rayOrigin.getX();
         float localAngle;
-        float localOriginX = 1 - getDistanceToClosestHorizontal(yBase, Angles.orientUpDown(quadrant));
 
         Function<Float, Float> xTransform;
         Function<Integer, Integer> yTransform;
@@ -87,6 +86,7 @@ public class Ray {
         }
 
         // compute all the offset values from the Y axis
+        float localOriginX = 1 - getDistanceToClosestHorizontal(yBase, Angles.orientUpDown(quadrant));
         List<Float> yValues = Angles.intersectVertical(localOriginX, localAngle, numberToCompute);
 
         // transpose
@@ -95,6 +95,66 @@ public class Ray {
                 float newX = xTransform.apply(offset);
                 float newY = yTransform.apply((int) yBase);
                 yBase = newY;
+                points.add(new FloatingPoint(newX, newY));
+            }
+        }
+
+        return points;
+    }
+
+    /**
+     * compute all the points where this ray intersects the world map on its vertical axis' (axi?)
+     *
+     * @param numberToCompute the number of intersecting points to compute
+     * @return the intersections found
+     */
+    public List<FloatingPoint> intersectWorldVertical(int numberToCompute) {
+        if (numberToCompute <= 0) throw new IllegalArgumentException("numberToCompute needs to be greater than 0");
+
+        List<FloatingPoint> points = new ArrayList<>();
+
+        if (quadrant == Quadrant.UP || quadrant == Quadrant.DOWN || quadrant == Quadrant.RIGHT || quadrant == Quadrant.LEFT) {
+            // for a Quadrant of UP, DOWN, LEFT, RIGHT we can't compute anything so we return the empty List
+            return points;
+        }
+
+        float yBase = rayOrigin.getY();
+        float xBase = rayOrigin.getX();
+        float localAngle;
+
+        Function<Integer, Integer> xTransform;
+        Function<Float, Float> yTransform;
+
+        if (quadrant == Quadrant.UP_LEFT) {
+            localAngle = 360 - angle;
+            yTransform = offset -> yBase - offset;
+            xTransform = x -> x - 1;
+            xBase++;
+        } else if (quadrant == Quadrant.UP_RIGHT) {
+            localAngle = angle;
+            yTransform = offset -> yBase + offset;
+            xTransform = x -> x - 1;
+            xBase++;
+        } else if (quadrant == Quadrant.DOWN_LEFT) {
+            localAngle = angle - 180;
+            yTransform = offset -> yBase - offset;
+            xTransform = x -> x + 1;
+        } else {
+            localAngle = 180 - angle;
+            yTransform = offset -> yBase + offset;
+            xTransform = x -> x + 1;
+        }
+
+        // compute all the offset values from the Y axis
+        float localOriginY = 1 - getDistanceToClosestVertical(xBase, Angles.orientUpDown(quadrant));
+        List<Float> yValues = Angles.intersectHorizontal(localOriginY, localAngle, numberToCompute);
+
+        // transpose
+        if (yValues != null && !yValues.isEmpty()) {
+            for (Float offset : yValues) {
+                float newX = xTransform.apply((int) xBase);
+                float newY = yTransform.apply(offset);
+                xBase = newX;
                 points.add(new FloatingPoint(newX, newY));
             }
         }

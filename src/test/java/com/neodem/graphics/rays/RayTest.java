@@ -38,7 +38,7 @@ public class RayTest {
         FloatingPoint rayOrigin = new FloatingPoint(7.5f, 13.8f);
         ray = new Ray(rayOrigin, 338);
 
-        List<FloatingPoint> floatingPoints = ray.intersectHorizontal(4);
+        List<FloatingPoint> floatingPoints = ray.intersectWorldHorizontal(4);
         assertThat(floatingPoints).hasSize(4);
         assertThat(floatingPoints.get(0).getX()).isCloseTo(7.176779f, Offset.offset(.00001f));
         assertThat(floatingPoints.get(0).getY()).isCloseTo(13f, Offset.offset(.00001f));
@@ -55,7 +55,7 @@ public class RayTest {
         FloatingPoint rayOrigin = new FloatingPoint(7.5f, 13.8f);
         ray = new Ray(rayOrigin, 22);
 
-        List<FloatingPoint> floatingPoints = ray.intersectHorizontal(4);
+        List<FloatingPoint> floatingPoints = ray.intersectWorldHorizontal(4);
         assertThat(floatingPoints).hasSize(4);
         assertThat(floatingPoints.get(0).getX()).isCloseTo(7.823221f, Offset.offset(.00001f));
         assertThat(floatingPoints.get(0).getY()).isCloseTo(13f, Offset.offset(.00001f));
@@ -72,7 +72,7 @@ public class RayTest {
         FloatingPoint rayOrigin = new FloatingPoint(7.5f, 13.8f);
         ray = new Ray(rayOrigin, 202);
 
-        List<FloatingPoint> floatingPoints = ray.intersectHorizontal(4);
+        List<FloatingPoint> floatingPoints = ray.intersectWorldHorizontal(4);
         assertThat(floatingPoints).hasSize(4);
         assertThat(floatingPoints.get(0).getX()).isCloseTo(7.4191947f, Offset.offset(.00001f));
         assertThat(floatingPoints.get(0).getY()).isCloseTo(14f, Offset.offset(.00001f));
@@ -89,7 +89,7 @@ public class RayTest {
         FloatingPoint rayOrigin = new FloatingPoint(7.5f, 13.8f);
         ray = new Ray(rayOrigin, 158);
 
-        List<FloatingPoint> floatingPoints = ray.intersectHorizontal(4);
+        List<FloatingPoint> floatingPoints = ray.intersectWorldHorizontal(4);
         assertThat(floatingPoints).hasSize(4);
         assertThat(floatingPoints.get(0).getX()).isCloseTo(7.5808053f, Offset.offset(.00001f));
         assertThat(floatingPoints.get(0).getY()).isCloseTo(14f, Offset.offset(.00001f));
@@ -102,10 +102,27 @@ public class RayTest {
     }
 
     @Test
+    public void intersectWorldVerticalShouldComputeCorrectPointsCorrectlyUpLeft() {
+        FloatingPoint rayOrigin = new FloatingPoint(7.5f, 13.8f);
+        ray = new Ray(rayOrigin, 338);
+
+        List<FloatingPoint> floatingPoints = ray.intersectWorldVertical(4);
+        assertThat(floatingPoints).hasSize(4);
+        assertThat(floatingPoints.get(0).getX()).isCloseTo(7.0f, Offset.offset(.00001f));
+        assertThat(floatingPoints.get(0).getY()).isCloseTo(12.562457f, Offset.offset(.00001f));
+        assertThat(floatingPoints.get(1).getX()).isCloseTo(6.0f, Offset.offset(.00001f));
+        assertThat(floatingPoints.get(1).getY()).isCloseTo(10.08737f, Offset.offset(.00001f));
+        assertThat(floatingPoints.get(2).getX()).isCloseTo(5.0f, Offset.offset(.00001f));
+        assertThat(floatingPoints.get(2).getY()).isCloseTo(7.612283f, Offset.offset(.00001f));
+        assertThat(floatingPoints.get(3).getX()).isCloseTo(4.0f, Offset.offset(.00001f));
+        assertThat(floatingPoints.get(3).getY()).isCloseTo(5.1371965f, Offset.offset(.00001f));
+    }
+
+    @Test
     public void intersectHorizontalShouldComputeNoPointsUp() {
         FloatingPoint rayOrigin = new FloatingPoint(7.5f, 13.8f);
         ray = new Ray(rayOrigin, 0);
-        List<FloatingPoint> floatingPoints = ray.intersectHorizontal(4);
+        List<FloatingPoint> floatingPoints = ray.intersectWorldHorizontal(4);
         assertThat(floatingPoints).hasSize(0);
     }
 
@@ -113,7 +130,7 @@ public class RayTest {
     public void intersectHorizontalShouldComputeNoPointsDown() {
         FloatingPoint rayOrigin = new FloatingPoint(7.5f, 13.8f);
         ray = new Ray(rayOrigin, 180);
-        List<FloatingPoint> floatingPoints = ray.intersectHorizontal(4);
+        List<FloatingPoint> floatingPoints = ray.intersectWorldHorizontal(4);
         assertThat(floatingPoints).hasSize(0);
     }
 
@@ -121,7 +138,7 @@ public class RayTest {
     public void intersectHorizontalShouldComputeNoPointsRight() {
         FloatingPoint rayOrigin = new FloatingPoint(7.5f, 13.8f);
         ray = new Ray(rayOrigin, 90);
-        List<FloatingPoint> floatingPoints = ray.intersectHorizontal(4);
+        List<FloatingPoint> floatingPoints = ray.intersectWorldHorizontal(4);
         assertThat(floatingPoints).hasSize(0);
     }
 
@@ -129,7 +146,7 @@ public class RayTest {
     public void intersectHorizontalShouldComputeNoPointsLeft() {
         FloatingPoint rayOrigin = new FloatingPoint(7.5f, 13.8f);
         ray = new Ray(rayOrigin, 270);
-        List<FloatingPoint> floatingPoints = ray.intersectHorizontal(4);
+        List<FloatingPoint> floatingPoints = ray.intersectWorldHorizontal(4);
         assertThat(floatingPoints).hasSize(0);
     }
 

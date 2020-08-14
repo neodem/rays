@@ -54,6 +54,8 @@ public class Angles {
      * <p>
      * The coordinate system is as follows: standard X/Y graph with Y up and X to the right
      * The origin/base of the angle is oriented where Y=0 and X = originX
+     * <p>
+     * The tangents are computed on all of the X values that are integers greater than `originX`
      *
      * @param originX         (must be greater or equal to 0)
      * @param angle           0-90 degrees
@@ -89,6 +91,54 @@ public class Angles {
                 float newY = (float) (previousY + tan);
                 points.add(newY);
                 previousY = newY;
+            }
+        }
+
+        return points;
+    }
+
+    /**
+     * this will compute a number of tangents based on an angle and an originX value.
+     * <p>
+     * The coordinate system is as follows: standard X/Y graph with Y up and X to the right
+     * The origin/base of the angle is oriented where Y=0 and X = originX
+     * <p>
+     * The tangents are computed on all of the Y values that are integers greater than `originY`
+     *
+     * @param originY         (must be greater or equal to 0)
+     * @param angle           0-90 degrees
+     * @param numberToCompute the number of tans to compute
+     * @return
+     */
+    public static List<Float> intersectHorizontal(float originY, float angle, int numberToCompute) {
+        if (numberToCompute <= 0) throw new IllegalArgumentException("numberToCompute needs to be gt 0");
+        if (angle < 0) throw new IllegalArgumentException("angle should be positive");
+        if (angle > 90) throw new IllegalArgumentException("angle may not be greater than 90");
+        if (originY < 0) throw new IllegalArgumentException("originY may not be negative");
+
+        List<Float> points = new ArrayList<>();
+
+        double tan = Math.tan(Math.toRadians(90 - angle));
+
+        float x;
+        // compute first point!
+        if (originY > 0) {
+            float y = (int) originY + 1;
+            float dy = y - originY;
+            x = (float) (dy * tan);
+        } else {
+            x = (float) tan;
+        }
+
+        points.add(x);
+
+        // compute other points
+        if (numberToCompute > 1) {
+            float previousX = x;
+            for (int i = 0; i < numberToCompute - 1; i++) {
+                float newX = (float) (previousX + tan);
+                points.add(newX);
+                previousX = newX;
             }
         }
 
