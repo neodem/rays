@@ -53,6 +53,7 @@ public class WorldMap {
      */
     public Intersection rayIntersection(Ray ray) {
         List<FloatingPoint> hPoints = ray.intersectWorldHorizontal(mapHeight);
+
         // check against all HWALLS, remove all misses
         Collection<Point> hWallOrigins = data.get(HWALL);
         Iterator<FloatingPoint> iterator = hPoints.iterator();
@@ -105,17 +106,6 @@ public class WorldMap {
 
         return null;
     }
-
-    private boolean inersectVWall(Point vWallOrigin, FloatingPoint floatingPoint) {
-
-
-        return false;
-    }
-
-    private boolean intersectHWall(Point hWallOrigin, FloatingPoint floatingPoint) {
-        return (int) floatingPoint.getY() == hWallOrigin.y;
-    }
-
 
     /// creating Elements /adding to/removing from map
 
