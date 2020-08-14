@@ -53,10 +53,15 @@ public class Ray {
 
         List<FloatingPoint> points = new ArrayList<>();
 
+        if (quadrant == Quadrant.UP || quadrant == Quadrant.DOWN || quadrant == Quadrant.RIGHT || quadrant == Quadrant.LEFT) {
+            // for a Quadrant of UP, DOWN, LEFT, RIGHT we can't compute anything so we return the empty List
+            return points;
+        }
+
         float yBase = rayOrigin.getY();
         float xBase = rayOrigin.getX();
         float localAngle;
-        float localOriginX = 1 - getDistanceToClosestHorizontal(rayOrigin.getY(), Angles.orientUpDown(quadrant));
+        float localOriginX = 1 - getDistanceToClosestHorizontal(yBase, Angles.orientUpDown(quadrant));
 
         Function<Float, Float> xTransform;
         Function<Integer, Integer> yTransform;
@@ -75,14 +80,10 @@ public class Ray {
             localAngle = angle - 180;
             xTransform = offset -> xBase - offset;
             yTransform = y -> y + 1;
-        } else if (quadrant == Quadrant.DOWN_RIGHT) {
+        } else {
             localAngle = 180 - angle;
             xTransform = offset -> xBase + offset;
             yTransform = y -> y + 1;
-        } else {
-
-            // for a Quadrant of UP, DOWN, LEFT, RIGHT we can't compute anything so we return the empty List
-            return points;
         }
 
         // compute all the offset values from the Y axis
