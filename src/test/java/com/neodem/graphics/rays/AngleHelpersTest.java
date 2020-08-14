@@ -15,9 +15,11 @@ public class AngleHelpersTest {
 
     @Test
     public void intersectVerticalShouldComputeCorrectly() {
-        List<Float> yValues = AngleHelpers.intersectVertical(.2f, 22, 2);
-        assertThat(yValues).hasSize(2);
+        List<Float> yValues = AngleHelpers.intersectVertical(.2f, 22, 4);
+        assertThat(yValues).hasSize(4);
         assertThat(yValues.get(0)).isCloseTo(.323221f, Offset.offset(.00001f));
         assertThat(yValues.get(1)).isCloseTo(.72724724f, Offset.offset(.00001f));
+        assertThat(yValues.get(2)).isCloseTo(1.1312735f, Offset.offset(.00001f));
+        assertThat(yValues.get(3)).isCloseTo(1.5352998f, Offset.offset(.00001f));
     }
 }

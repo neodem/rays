@@ -70,6 +70,7 @@ public class AngleHelpers {
             for (int i = 0; i < numberToCompute - 1; i++) {
                 float newY = (float) (previousY + tan);
                 points.add(newY);
+                previousY = newY;
             }
         }
 

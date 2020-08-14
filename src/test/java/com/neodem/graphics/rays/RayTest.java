@@ -38,12 +38,16 @@ public class RayTest {
         FloatingPoint rayOrigin = new FloatingPoint(7.5f, 13.8f);
         ray = new Ray(rayOrigin, 338);
 
-        List<FloatingPoint> floatingPoints = ray.intersectHorizontal(2);
-        assertThat(floatingPoints).hasSize(2);
+        List<FloatingPoint> floatingPoints = ray.intersectHorizontal(4);
+        assertThat(floatingPoints).hasSize(4);
         assertThat(floatingPoints.get(0).getX()).isCloseTo(7.176779f, Offset.offset(.00001f));
         assertThat(floatingPoints.get(0).getY()).isCloseTo(13f, Offset.offset(.00001f));
         assertThat(floatingPoints.get(1).getX()).isCloseTo(6.772753f, Offset.offset(.00001f));
         assertThat(floatingPoints.get(1).getY()).isCloseTo(12f, Offset.offset(.00001f));
+        assertThat(floatingPoints.get(2).getX()).isCloseTo(6.3687267f, Offset.offset(.00001f));
+        assertThat(floatingPoints.get(2).getY()).isCloseTo(11f, Offset.offset(.00001f));
+        assertThat(floatingPoints.get(3).getX()).isCloseTo(5.9647f, Offset.offset(.00001f));
+        assertThat(floatingPoints.get(3).getY()).isCloseTo(10f, Offset.offset(.00001f));
     }
 
     @Test
