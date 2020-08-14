@@ -5,6 +5,10 @@ import java.util.List;
 import java.util.function.Function;
 
 /**
+ * Math stuff for a Ray that we are going to project from a point on the WorldMap. Everything
+ * here operates on the assumption that the world map has 0,0 in the top left and Y is Down
+ * and X is Right
+ * <p>
  * Created by Vincent Fumo (neodem@gmail.com)
  * Created on 8/11/20
  */
@@ -42,7 +46,7 @@ public class Ray {
      * compute all the points where this ray intersects the world map on its horizontal axis'
      *
      * @param numberToCompute the number of intersecting points to compute
-     * @return the intersections with the 0 index being the origin of the ray
+     * @return the intersections found
      */
     public List<FloatingPoint> intersectHorizontal(int numberToCompute) {
         if (numberToCompute <= 0) throw new IllegalArgumentException("numberToCompute needs to be greater than 0");
@@ -127,16 +131,6 @@ public class Ray {
         } else {
             return x - (int) x;
         }
-    }
-
-    /**
-     * give the point where this ray intersects the world map on the vertical
-     *
-     * @param index (0 based) : which vertical to check
-     * @return the intersection
-     */
-    public FloatingPoint intersectVertical(int index) {
-        return null;
     }
 
     public FloatingPoint getOrigin() {
