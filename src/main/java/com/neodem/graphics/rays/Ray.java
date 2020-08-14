@@ -2,6 +2,7 @@ package com.neodem.graphics.rays;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Function;
 
 /**
  * Created by Vincent Fumo (neodem@gmail.com)
@@ -25,7 +26,7 @@ public class Ray {
         if (angle > 359) throw new IllegalArgumentException("angle needs to be 0-359");
         this.angle = angle;
 
-        this.quadrant = AngleHelpers.determineQuadrant(angle);
+        this.quadrant = Angles.determineQuadrant(angle);
     }
 
     @Override
@@ -48,78 +49,52 @@ public class Ray {
 
         List<FloatingPoint> points = new ArrayList<>();
 
-        float dh = getDistanceToClosestHorizontal(rayOrigin.getY(), AngleHelpers.orientUpDown(quadrant));
+        float yBase = rayOrigin.getY();
+        float xBase = rayOrigin.getX();
+        float localAngle;
+        float localOriginX = 1 - getDistanceToClosestHorizontal(rayOrigin.getY(), Angles.orientUpDown(quadrant));
 
-        float localOriginX = 0;
-        float localAngle = 0;
+        Function<Float, Float> xTransform;
+        Function<Integer, Integer> yTransform;
+
         if (quadrant == Quadrant.UP_LEFT) {
-            localOriginX = 1 - dh;
             localAngle = 360 - angle;
+            xTransform = offset -> xBase - offset;
+            yTransform = y -> y - 1;
+            yBase++;
         } else if (quadrant == Quadrant.UP_RIGHT) {
-            localOriginX = 1 - dh;
             localAngle = angle;
+            xTransform = offset -> xBase + offset;
+            yTransform = y -> y - 1;
+            yBase++;
         } else if (quadrant == Quadrant.DOWN_LEFT) {
-            localOriginX = dh;
             localAngle = angle - 180;
+            xTransform = offset -> xBase - offset;
+            yTransform = y -> y + 1;
+        } else if (quadrant == Quadrant.DOWN_RIGHT) {
+            localAngle = 180 - angle;
+            xTransform = offset -> xBase + offset;
+            yTransform = y -> y + 1;
+        } else {
+
+            // for a Quadrant of UP, DOWN, LEFT, RIGHT we can't compute anything so we return the empty List
+            return points;
         }
 
+        // compute all the offset values from the Y axis
+        List<Float> yValues = Angles.intersectVertical(localOriginX, localAngle, numberToCompute);
 
-        List<Float> yValues = AngleHelpers.intersectVertical(localOriginX, localAngle, numberToCompute);
-
-        if (quadrant == Quadrant.UP_LEFT) {
-            points = makePointsFromOriginUpLeft(rayOrigin, yValues);
-        } else if (quadrant == Quadrant.UP_RIGHT) {
-            points = makePointsFromOriginUpRight(rayOrigin, yValues);
-        } else if (quadrant == Quadrant.DOWN_LEFT) {
-            points = makePointsFromOriginDownLeft(rayOrigin, yValues);
+        // transpose
+        if (yValues != null && !yValues.isEmpty()) {
+            for (Float offset : yValues) {
+                float newX = xTransform.apply(offset);
+                float newY = yTransform.apply((int) yBase);
+                yBase = newY;
+                points.add(new FloatingPoint(newX, newY));
+            }
         }
 
         return points;
-    }
-
-    protected List<FloatingPoint> makePointsFromOriginDownLeft(FloatingPoint worldOrigin, List<Float> offsets) {
-        if (offsets == null) return null;
-
-        List<FloatingPoint> result = new ArrayList<>();
-
-        int y = (int) worldOrigin.getY();
-        float xBase = worldOrigin.getX();
-
-        for (Float offset : offsets) {
-            result.add(new FloatingPoint(xBase - offset, ++y));
-        }
-
-        return result;
-    }
-
-    protected List<FloatingPoint> makePointsFromOriginUpLeft(FloatingPoint worldOrigin, List<Float> offsets) {
-        if (offsets == null) return null;
-
-        List<FloatingPoint> result = new ArrayList<>();
-
-        int y = (int) worldOrigin.getY();
-        float xBase = worldOrigin.getX();
-
-        for (Float offset : offsets) {
-            result.add(new FloatingPoint(xBase - offset, y--));
-        }
-
-        return result;
-    }
-
-    protected List<FloatingPoint> makePointsFromOriginUpRight(FloatingPoint worldOrigin, List<Float> offsets) {
-        if (offsets == null) return null;
-
-        List<FloatingPoint> result = new ArrayList<>();
-
-        int y = (int) worldOrigin.getY();
-        float xBase = worldOrigin.getX();
-
-        for (Float offset : offsets) {
-            result.add(new FloatingPoint(xBase + offset, y--));
-        }
-
-        return result;
     }
 
     /**
