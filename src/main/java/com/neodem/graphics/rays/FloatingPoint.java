@@ -6,12 +6,44 @@ package com.neodem.graphics.rays;
  */
 public class FloatingPoint {
 
+    final double THRESHOLD = .0001;
+
     private final float x;
     private final float y;
 
     public FloatingPoint() {
         this.x = 0f;
         this.y = 0f;
+    }
+
+    public boolean isYRelativelyEqualTo(float compare) {
+        return Math.abs(y - compare) < THRESHOLD;
+    }
+
+    public boolean isXRelativelyEqualTo(float compare) {
+        return Math.abs(x - compare) < THRESHOLD;
+    }
+
+    /**
+     * range [low,high)
+     *
+     * @param low
+     * @param high
+     * @return
+     */
+    public boolean isYWithinRange(int low, int high) {
+        return y >= low && y < high;
+    }
+
+    /**
+     * range [low,high)
+     *
+     * @param low
+     * @param high
+     * @return
+     */
+    public boolean isXWithinRange(int low, int high) {
+        return x >= low && x < high;
     }
 
     @Override
@@ -30,5 +62,13 @@ public class FloatingPoint {
 
     public float getY() {
         return y;
+    }
+
+    public float getXAbsolute() {
+        return x - (int) x;
+    }
+
+    public float getYAbsolute() {
+        return y - (int) y;
     }
 }

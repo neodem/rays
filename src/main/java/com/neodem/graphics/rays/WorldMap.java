@@ -37,7 +37,7 @@ public class WorldMap {
         this.mapHeight = mapHeight;
     }
 
-    public class Intersection {
+    public class Intersection implements Comparable<Intersection> {
         ElementType elementType;
 
         // this is the intersection point on the element from the element origin location
@@ -49,35 +49,39 @@ public class WorldMap {
         FloatingPoint intersection;
 
         Point wallOrigin;
+
+        @Override
+        public int compareTo(Intersection o) {
+            return (int) (distance - o.distance);
+        }
     }
 
-    final double THRESHOLD = .0001;
-
     /**
-     * return the first intersection with the world
+     * return the intersections with elements in the WorldMap
      *
      * @param ray
      * @return
      */
-    public Intersection rayIntersection(Ray ray) {
+    public Collection<Intersection> rayIntersections(Ray ray) {
 
-        Collection<FloatingPoint> hPoints = ray.intersectWorldHorizontal(mapHeight);
-        hPoints.addAll(ray.intersectWorldVertical(mapWidth));
+        // collect all possible intersections
+        Collection<FloatingPoint> possiblePoints = ray.intersectWorldHorizontal(mapHeight);
+        possiblePoints.addAll(ray.intersectWorldVertical(mapWidth));
 
         Collection<Point> hWallOrigins = data.get(HWALL);
         Collection<Point> vWallOrigins = data.get(VWALL);
 
         Collection<Intersection> intersections = new HashSet<>();
-        hPoints.stream()
+        possiblePoints.stream()
                 .filter(this::outOfBounds)
                 .forEach(p -> {
                     for (Point wallOrigin : hWallOrigins) {
                         // do we connect with any H wall?
-                        if (Math.abs(p.getY() - wallOrigin.y) < THRESHOLD) {
-                            if (p.getX() >= wallOrigin.x && p.getX() < (wallOrigin.x + 1)) {
+                        if (p.isYRelativelyEqualTo(wallOrigin.y)) {
+                            if (p.isXWithinRange(wallOrigin.x, wallOrigin.x + 1)) {
                                 Intersection i = new Intersection();
                                 i.elementType = HWALL;
-                                i.hitPoint = p.getX() - (int) p.getX();
+                                i.hitPoint = p.getXAbsolute();
                                 i.intersection = p;
                                 i.wallOrigin = wallOrigin;
                                 intersections.add(i);
@@ -86,12 +90,12 @@ public class WorldMap {
                     }
                     for (Point wallOrigin : vWallOrigins) {
                         // do we connect with any V wall?
-                        if (Math.abs(p.getX() - wallOrigin.x) < THRESHOLD) {
-                            if (p.getY() >= wallOrigin.y && p.getY() < (wallOrigin.y + 1)) {
+                        if (p.isXRelativelyEqualTo(wallOrigin.x)) {
+                            if (p.isYWithinRange(wallOrigin.y, wallOrigin.y + 1)) {
                                 Intersection i = new Intersection();
                                 i.elementType = VWALL;
                                 i.intersection = p;
-                                i.hitPoint = p.getY() - (int) p.getY();
+                                i.hitPoint = p.getYAbsolute();
                                 i.wallOrigin = wallOrigin;
                                 intersections.add(i);
                             }
@@ -99,11 +103,7 @@ public class WorldMap {
                     }
                 });
 
-
-        // compute distances for all remaining points
-        // for the least distance we compute the hitPoint and return the Intersection
-
-        return null;
+        return intersections;
     }
 
     private boolean outOfBounds(FloatingPoint point) {

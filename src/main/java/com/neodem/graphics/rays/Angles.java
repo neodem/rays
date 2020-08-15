@@ -58,7 +58,7 @@ public class Angles {
      * The tangents are computed on all of the X values that are integers greater than `originX`
      *
      * @param originX         (must be greater or equal to 0)
-     * @param angle           0-90 degrees
+     * @param angle           (0-90) degrees
      * @param numberToCompute the number of tans to compute
      * @return
      */
@@ -106,7 +106,7 @@ public class Angles {
      * The tangents are computed on all of the Y values that are integers greater than `originY`
      *
      * @param originY         (must be greater or equal to 0)
-     * @param angle           0-90 degrees
+     * @param angle           (0-90) degrees
      * @param numberToCompute the number of tans to compute
      * @return
      */
@@ -143,5 +143,58 @@ public class Angles {
         }
 
         return points;
+    }
+
+    /**
+     * convert from an absolute angle (like 22 degrees) to a world angle relative to the playerViewAngle to the "left" or counter-clockwise
+     * eg. if the player is facing 10 and we want to transpose 22 to the left we'd want 348
+     *
+     * @param rayAngle        the angle we need to convert
+     * @param playerViewAngle the players direction [0-360) 0 == up
+     * @return
+     */
+    public static float convertLeftAngle(float rayAngle, float playerViewAngle) {
+        if (playerViewAngle < 0)
+            throw new IllegalArgumentException("playerViewAngle should be greater than or equal to 0");
+        if (!(playerViewAngle < 360)) throw new IllegalArgumentException("playerViewAngle must be less than 360");
+
+        // go "left" on the circle
+        float absAngle = playerViewAngle - rayAngle;
+        if (absAngle > 0) return absAngle;
+        if (absAngle == 0) return 0;
+        return correctAngle(absAngle);
+    }
+
+    /**
+     * convert from an absolute angle (like 22 degrees) to a world angle relative to the playerViewAngle to the "right" or clockwise
+     * eg. if the player is facing 340 and we want to transpose 22 to the right we'd want 2
+     *
+     * @param rayAngle        the angle we need to convert
+     * @param playerViewAngle the players direction [0-360) 0 == up
+     * @return
+     */
+    public static float convertRightAngle(float rayAngle, float playerViewAngle) {
+        if (playerViewAngle < 0)
+            throw new IllegalArgumentException("playerViewAngle should be greater than or equal to 0");
+        if (!(playerViewAngle < 360)) throw new IllegalArgumentException("playerViewAngle must be less than 360");
+
+        // go "right" on the circle
+        float absAngle = playerViewAngle + rayAngle;
+        if (absAngle == 0) return 0;
+        if (absAngle < 360) return absAngle;
+        return correctAngle(absAngle);
+    }
+
+    /**
+     * correct the angle to be from [0-360)
+     *
+     * @param angle
+     * @return
+     */
+    public static float correctAngle(float angle) {
+        if (angle < 0) return correctAngle(360 + angle);
+        if (angle == 0) return 0;
+        if (angle < 360) return angle;
+        return correctAngle(angle - 360);
     }
 }
