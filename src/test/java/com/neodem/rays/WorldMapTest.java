@@ -1,4 +1,4 @@
-package com.neodem.graphics.rays;
+package com.neodem.rays;
 
 import org.assertj.core.data.Offset;
 import org.junit.After;

@@ -1,4 +1,4 @@
-package com.neodem.graphics.rays;
+package com.neodem.rays;
 
 /**
  * If we assume a full 360 degree circle (0 is up), an angle could be in one of 4 quadrants or it

@@ -1,7 +1,7 @@
-package com.neodem.graphics.rays;
+package com.neodem.rays;
 
-import com.neodem.graphics.rays.graphics.Color;
-import com.neodem.graphics.rays.graphics.Paintable;
+import com.neodem.rays.graphics.Color;
+import com.neodem.rays.graphics.Paintable;
 
 import java.awt.Graphics;
 

@@ -1,4 +1,4 @@
-package com.neodem.graphics.rays;
+package com.neodem.rays;
 
 import java.awt.Point;
 import java.util.Collection;
@@ -7,8 +7,8 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
 
-import static com.neodem.graphics.rays.WorldMap.ElementType.HWALL;
-import static com.neodem.graphics.rays.WorldMap.ElementType.VWALL;
+import static com.neodem.rays.WorldMap.ElementType.HWALL;
+import static com.neodem.rays.WorldMap.ElementType.VWALL;
 
 /**
  * a WorldMap uses X,Y notation with it's top left being 0,0 and X going right and Y going down

@@ -1,4 +1,4 @@
-package com.neodem.graphics.rays;
+package com.neodem.rays;
 
 import java.util.ArrayList;
 import java.util.List;

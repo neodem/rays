@@ -1,4 +1,4 @@
-package com.neodem.graphics.rays;
+package com.neodem.rays;
 
 /**
  * a more corse version of a Quadrant

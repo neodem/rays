@@ -1,4 +1,4 @@
-package com.neodem.graphics.rays;
+package com.neodem.rays;
 
 /**
  * Created by Vincent Fumo (neodem@gmail.com)

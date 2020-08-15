@@ -1,4 +1,4 @@
-package com.neodem.graphics.rays.graphics;
+package com.neodem.rays.graphics;
 
 import java.io.BufferedReader;
 import java.io.IOException;

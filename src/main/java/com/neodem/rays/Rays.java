@@ -1,7 +1,7 @@
-package com.neodem.graphics.rays;
+package com.neodem.rays;
 
-import com.neodem.graphics.rays.graphics.ActiveCanvas;
-import com.neodem.graphics.rays.graphics.AppFrame;
+import com.neodem.rays.graphics.ActiveCanvas;
+import com.neodem.rays.graphics.AppFrame;
 
 /**
  * Created by Vincent Fumo (neodem@gmail.com)
