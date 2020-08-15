@@ -5,7 +5,6 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 
 import static com.neodem.graphics.rays.WorldMap.ElementType.HWALL;
@@ -43,7 +42,16 @@ public class WorldMap {
 
         // this is the intersection point on the element from the element origin location
         float hitPoint;
+
+        // distance from ray origin
+        float distance;
+
+        FloatingPoint intersection;
+
+        Point wallOrigin;
     }
+
+    final double THRESHOLD = .0001;
 
     /**
      * return the first intersection with the world
@@ -52,59 +60,54 @@ public class WorldMap {
      * @return
      */
     public Intersection rayIntersection(Ray ray) {
-        List<FloatingPoint> hPoints = ray.intersectWorldHorizontal(mapHeight);
 
-        // check against all HWALLS, remove all misses
+        Collection<FloatingPoint> hPoints = ray.intersectWorldHorizontal(mapHeight);
+        hPoints.addAll(ray.intersectWorldVertical(mapWidth));
+
         Collection<Point> hWallOrigins = data.get(HWALL);
-        Iterator<FloatingPoint> iterator = hPoints.iterator();
-        while (iterator.hasNext()) {
-            FloatingPoint point = iterator.next();
-            if (point.getY() < 0 || point.getY() > mapHeight || point.getX() < 0 || point.getX() > mapWidth) {
-                iterator.remove();
-                continue;
-            }
-            boolean hit = false;
-            for (Point wallOrigin : hWallOrigins) {
-                // do we connect with any H wall?
-                if ((int) point.getY() == wallOrigin.y) {
-                    if (point.getX() >= wallOrigin.x && point.getX() < (wallOrigin.x + 1)) {
-                        hit = true;
-                        break;
-                    }
-                }
-            }
-
-            if (!hit) iterator.remove();
-        }
-
-        List<FloatingPoint> vPoints = ray.intersectWorldVertical(mapWidth);
-        // check against all VWALLS, remove all misses
         Collection<Point> vWallOrigins = data.get(VWALL);
-        iterator = vPoints.iterator();
-        while (iterator.hasNext()) {
-            FloatingPoint point = iterator.next();
-            if (point.getY() < 0 || point.getY() > mapHeight || point.getX() < 0 || point.getX() > mapWidth) {
-                iterator.remove();
-                continue;
-            }
-            boolean hit = false;
-            for (Point wallOrigin : vWallOrigins) {
-                // do we connect with any V wall?
-                if ((int) point.getX() == wallOrigin.x) {
-                    if (point.getY() >= wallOrigin.y && point.getY() < (wallOrigin.y + 1)) {
-                        hit = true;
-                        break;
-                    }
-                }
-            }
 
-            if (!hit) iterator.remove();
-        }
+        Collection<Intersection> intersections = new HashSet<>();
+        hPoints.stream()
+                .filter(this::outOfBounds)
+                .forEach(p -> {
+                    for (Point wallOrigin : hWallOrigins) {
+                        // do we connect with any H wall?
+                        if (Math.abs(p.getY() - wallOrigin.y) < THRESHOLD) {
+                            if (p.getX() >= wallOrigin.x && p.getX() < (wallOrigin.x + 1)) {
+                                Intersection i = new Intersection();
+                                i.elementType = HWALL;
+                                i.hitPoint = p.getX() - (int) p.getX();
+                                i.intersection = p;
+                                i.wallOrigin = wallOrigin;
+                                intersections.add(i);
+                            }
+                        }
+                    }
+                    for (Point wallOrigin : vWallOrigins) {
+                        // do we connect with any V wall?
+                        if (Math.abs(p.getX() - wallOrigin.x) < THRESHOLD) {
+                            if (p.getY() >= wallOrigin.y && p.getY() < (wallOrigin.y + 1)) {
+                                Intersection i = new Intersection();
+                                i.elementType = VWALL;
+                                i.intersection = p;
+                                i.hitPoint = p.getY() - (int) p.getY();
+                                i.wallOrigin = wallOrigin;
+                                intersections.add(i);
+                            }
+                        }
+                    }
+                });
+
 
         // compute distances for all remaining points
         // for the least distance we compute the hitPoint and return the Intersection
 
         return null;
+    }
+
+    private boolean outOfBounds(FloatingPoint point) {
+        return (point.getY() > 0 && point.getY() <= mapHeight && point.getX() > 0 && point.getX() <= mapWidth);
     }
 
     /// creating Elements /adding to/removing from map
