@@ -1,4 +1,4 @@
-package com.neodem.graphics.dd.engine.core;
+package com.neodem.graphics.rays.graphics;
 
 import java.awt.Graphics;
 

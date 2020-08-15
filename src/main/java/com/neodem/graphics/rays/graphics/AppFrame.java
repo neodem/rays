@@ -1,7 +1,7 @@
-package com.neodem.graphics.dd.engine.core;
+package com.neodem.graphics.rays.graphics;
 
 import javax.swing.*;
-import java.awt.*;
+import java.awt.Dimension;
 
 /**
  * A main frame for our graphic environment. It will start an app window (JFrame) and fill it with an ActiveCanvas

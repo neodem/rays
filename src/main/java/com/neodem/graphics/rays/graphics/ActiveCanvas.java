@@ -1,7 +1,13 @@
-package com.neodem.graphics.dd.engine.core;
+package com.neodem.graphics.rays.graphics;
 
 import javax.swing.*;
-import java.awt.*;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.Image;
+import java.awt.Rectangle;
+import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
 
 /**
@@ -28,7 +34,7 @@ public abstract class ActiveCanvas extends JPanel implements Runnable {
     // the main thread of the canvas.
     private Thread canvasThread;
 
-	private boolean running;
+    private boolean running;
 
     public ActiveCanvas(Dimension canvasSize) {
         super(false); // we don't use the default JPanel double-buffering
@@ -95,7 +101,7 @@ public abstract class ActiveCanvas extends JPanel implements Runnable {
      */
     protected Object lockPaint = new Object();
 
-	private Thread paintThread;
+    private Thread paintThread;
 
     /**
      * Our customized repaint method
@@ -147,10 +153,10 @@ public abstract class ActiveCanvas extends JPanel implements Runnable {
     /*------------------------------------------------------------------------------------*/
 
 
-	/**
-	 * OffScreen image for the GraphicsDirector.
-	 */
-	protected Image backBufferImage;
+    /**
+     * OffScreen image for the GraphicsDirector.
+     */
+    protected Image backBufferImage;
 
 
     /* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */

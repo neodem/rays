@@ -1,7 +1,7 @@
 package com.neodem.graphics.rays;
 
-import com.neodem.graphics.dd.engine.core.ActiveCanvas;
-import com.neodem.graphics.dd.engine.core.AppFrame;
+import com.neodem.graphics.rays.graphics.ActiveCanvas;
+import com.neodem.graphics.rays.graphics.AppFrame;
 
 /**
  * Created by Vincent Fumo (neodem@gmail.com)

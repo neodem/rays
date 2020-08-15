@@ -1,8 +1,8 @@
 package com.neodem.graphics.rays;
 
-import com.neodem.graphics.dd.engine.common.Color;
-import com.neodem.graphics.dd.engine.core.ActiveCanvas;
-import com.neodem.graphics.dd.engine.core.Paintable;
+import com.neodem.graphics.rays.graphics.Color;
+import com.neodem.graphics.rays.graphics.ActiveCanvas;
+import com.neodem.graphics.rays.graphics.Paintable;
 
 import java.awt.Dimension;
 import java.awt.Graphics;
