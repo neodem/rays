@@ -30,8 +30,8 @@ public class Ray {
         if (origin == null) throw new IllegalArgumentException("origin may not be null");
         this.rayOrigin = origin;
 
-        if (angle < 0) throw new IllegalArgumentException("angle needs to be 0-359");
-        if (angle > 359) throw new IllegalArgumentException("angle needs to be 0-359");
+        if (angle < 0) throw new IllegalArgumentException("angle needs to be 0-359, was " + angle);
+        if (!(angle < 360)) throw new IllegalArgumentException("angle needs to be 0-359, was " + angle);
         this.angle = angle;
 
         this.quadrant = Angles.determineQuadrant(angle);

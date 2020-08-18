@@ -1,7 +1,7 @@
 package com.neodem.rays;
 
-import com.neodem.rays.graphics.Color;
 import com.neodem.rays.graphics.ActiveCanvas;
+import com.neodem.rays.graphics.Color;
 import com.neodem.rays.graphics.Paintable;
 
 import java.awt.Dimension;
@@ -74,7 +74,7 @@ public class RaysCanvas extends ActiveCanvas {
         for (int locX = 0; locX < screenWMid; locX++) {
             float rayAngle = angleTick * (screenWMid - locX);
             float angleOffset = Angles.convertLeftAngle(rayAngle, playerViewAngle);
-            PaintableRay ray = computeRay(angleOffset, playerLocation);
+            PaintableRay ray = computeRay(angleOffset, playerLocation, locX);
             rays.add(ray);
         }
 
@@ -82,12 +82,12 @@ public class RaysCanvas extends ActiveCanvas {
         for (int locX = screenWMid; locX < screenW; locX++) {
             float rayAngle = playerViewAngle + (angleTick * locX);
             float angleOffset = Angles.convertRightAngle(rayAngle, playerViewAngle);
-            PaintableRay ray = computeRay(angleOffset, playerLocation);
+            PaintableRay ray = computeRay(angleOffset, playerLocation, locX);
             rays.add(ray);
         }
     }
 
-    private PaintableRay computeRay(float angleOffset, FloatingPoint playerLocation) {
+    private PaintableRay computeRay(float angleOffset, FloatingPoint playerLocation, int locX) {
         PaintableRay paintableRay = null;
 
         Ray ray = new Ray(playerLocation, angleOffset);
@@ -100,29 +100,24 @@ public class RaysCanvas extends ActiveCanvas {
             throw new RuntimeException("World Edge Encountered");
         } else {
             intersections = intersections.stream()
-                    .peek(this::addDistance)
                     .sorted()
                     .collect(Collectors.toList());
 
             intersectionToPaint = intersections.iterator().next();
         }
 
-        return makePaintableRay(intersectionToPaint);
+        return makePaintableRay(intersectionToPaint, locX);
     }
 
-    private PaintableRay makePaintableRay(WorldMap.Intersection intersection) {
+    private PaintableRay makePaintableRay(WorldMap.Intersection intersection, int locX) {
         // its here we convert the intersection into a ray. We would compute the height, the location and the
         // bitmap to paint (based on the element type, HWALL, VWALL, etc)
 
-        addDistance(intersection);
+        float height = 100 / intersection.distance;
 
-        return null;
+        return new PaintableRay((int)height, locX, screenHMid, Color.white);
     }
 
-    private void addDistance(WorldMap.Intersection intersection) {
-        // compute the distance to the hitPoint from the playerLocation
-        // consider the fisheye effect
-    }
 
     private void drawRays(List<Paintable> rays, Graphics g) {
         rays.stream().forEach(r -> r.paint(g));

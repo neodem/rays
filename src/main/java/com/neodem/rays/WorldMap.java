@@ -43,11 +43,13 @@ public class WorldMap {
         // this is the intersection point on the element from the element origin location
         float hitPoint;
 
-        // distance from ray origin
+        // distance from the interesection to the ray origin
         float distance;
 
+        // the actual intersection point that connected with the element
         FloatingPoint intersection;
 
+        // the wall origin, in X,Y as integers
         Point wallOrigin;
 
         @Override
@@ -103,7 +105,28 @@ public class WorldMap {
                     }
                 });
 
+        intersections.stream()
+                .forEach(i -> computeDistance(i, ray));
+
         return intersections;
+    }
+
+    private void computeDistance(Intersection i, Ray ray) {
+        // compute the distance to the hitPoint from the playerLocation
+        // TODO consider the fisheye effect
+
+        // temp.
+        float x1 = i.intersection.getX();
+        float y1 = i.intersection.getY();
+
+        float x2 = ray.getOrigin().getX();
+        float y2 = ray.getOrigin().getY();
+
+        float xs = (x1 - x2) * (x1 - x2);
+        float ys = (y1 - y2) * (y1 - y2);
+        float m = xs + ys;
+
+        i.distance = (float) Math.sqrt(m);
     }
 
     private boolean outOfBounds(FloatingPoint point) {

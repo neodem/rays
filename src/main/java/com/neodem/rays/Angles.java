@@ -11,7 +11,7 @@ public class Angles {
 
     public static Quadrant determineQuadrant(float angle) {
         if (angle < 0) throw new IllegalArgumentException("angle needs to be 0-359");
-        if (angle > 359) throw new IllegalArgumentException("angle needs to be 0-359");
+        if (!(angle < 360)) throw new IllegalArgumentException("angle needs to be 0-359");
 
         if (angle == 0) return Quadrant.UP;
         if (angle == 90) return Quadrant.RIGHT;
