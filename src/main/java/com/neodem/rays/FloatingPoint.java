@@ -16,6 +16,19 @@ public class FloatingPoint {
         this.y = 0f;
     }
 
+    public FloatingPoint(float x, float y) {
+        this.x = x;
+        this.y = y;
+    }
+
+    public FloatingPoint addX(float x) {
+        return new FloatingPoint(this.x + x, this.y);
+    }
+
+    public FloatingPoint addY(float y) {
+        return new FloatingPoint(this.x, this.y + y);
+    }
+
     public boolean isYRelativelyEqualTo(float compare) {
         return Math.abs(y - compare) < THRESHOLD;
     }
@@ -51,10 +64,6 @@ public class FloatingPoint {
         return "(" + x + "," + y + ")";
     }
 
-    public FloatingPoint(float x, float y) {
-        this.x = x;
-        this.y = y;
-    }
 
     public float getX() {
         return x;

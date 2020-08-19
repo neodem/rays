@@ -1,5 +1,9 @@
 package com.neodem.rays.graphics;
 
+import com.neodem.rays.RaysCanvas;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import javax.swing.*;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -8,6 +12,8 @@ import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.Rectangle;
 import java.awt.RenderingHints;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.awt.image.BufferedImage;
 
 /**
@@ -17,7 +23,9 @@ import java.awt.image.BufferedImage;
  * <p>
  * stolen wotlas engine idea
  */
-public abstract class ActiveCanvas extends JPanel implements Runnable {
+public abstract class ActiveCanvas extends JPanel implements Runnable, KeyListener {
+
+    private static final Logger logger = LoggerFactory.getLogger(ActiveCanvas.class);
 
     private boolean isLocked;
 
@@ -46,6 +54,31 @@ public abstract class ActiveCanvas extends JPanel implements Runnable {
         setPreferredSize(canvasSize);
         setMaximumSize(canvasSize);
         setMinimumSize(new Dimension(10, 10));
+
+        addKeyListener(this);
+        setFocusable(true);
+    }
+
+    private String keyPressed = null;
+    private String keyReleased = null;
+
+    @Override
+    public void keyTyped(KeyEvent e) {
+        logger.debug("{}", e);
+    }
+
+    @Override
+    public void keyPressed(KeyEvent e) {
+        logger.debug("{}", e);
+        keyPressed = KeyEvent.getKeyText(e.getKeyCode());
+        keyReleased = null;
+    }
+
+    @Override
+    public void keyReleased(KeyEvent e) {
+        logger.debug("{}", e);
+        keyReleased = KeyEvent.getKeyText(e.getKeyCode());
+        keyPressed = null;
     }
 
     public final void start() {
@@ -69,7 +102,7 @@ public abstract class ActiveCanvas extends JPanel implements Runnable {
      *
      * @param time
      */
-    public abstract void update(long time);
+    public abstract void update(long time, String keyPressed, String keyReleased);
 
     public abstract void draw(Graphics g);
 
@@ -80,7 +113,7 @@ public abstract class ActiveCanvas extends JPanel implements Runnable {
         Object lock = new Object();
         while (true) {
 
-            update(0);
+            update(0, keyPressed, keyReleased);
 
             if (canvas == null)
                 return;

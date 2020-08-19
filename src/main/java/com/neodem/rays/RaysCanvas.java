@@ -70,13 +70,28 @@ public class RaysCanvas extends ActiveCanvas {
     }
 
     @Override
-    public void update(long elapsedTime) {
-//        if (viewChanged) {
-            makeRays();
+    public void update(long elapsedTime, String kp, String kr) {
+        handleKeys(kp, kr);
 
-            // TODO change this once we can change our view.
+        if (viewChanged) {
+            makeRays();
             viewChanged = false;
-//        }
+        }
+    }
+
+    private void handleKeys(String kp, String kr) {
+        if (kp != null) {
+            logger.info("key pressed '{}'" + kp);
+            if ("W".equals(kp)) {
+                playerLocation = playerLocation.addX(-0.001f);
+            } else if ("S".equals(kp)) {
+                playerLocation = playerLocation.addX(.001f);
+            }
+
+            viewChanged = true;
+
+            logger.info("new player location : {}", playerLocation);
+        }
     }
 
     @Override
