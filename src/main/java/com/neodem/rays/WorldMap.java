@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import static com.neodem.rays.WorldMap.ElementType.HWALL;
 import static com.neodem.rays.WorldMap.ElementType.VWALL;
@@ -109,6 +110,31 @@ public class WorldMap {
                 .forEach(i -> computeDistance(i, ray));
 
         return intersections;
+    }
+
+    /**
+     * given a ray and the world, we determine if it interects and if so, we return the
+     * intersection that we should paint.
+     *
+     * @param ray
+     * @return
+     */
+    public WorldMap.Intersection findIntersectionToPaint(Ray ray) {
+        Collection<WorldMap.Intersection> intersections = rayIntersections(ray);
+        WorldMap.Intersection intersectionToPaint;
+        if (intersections.isEmpty()) {
+            // this ray hits the edge of the world
+            // TODO fix this by making HWALL and VWALL around our world, even though right now
+            // we have a TestWorldMap that is self contained so this should never happen
+            throw new RuntimeException("World Edge Encountered");
+        } else {
+            intersections = intersections.stream()
+                    .sorted()
+                    .collect(Collectors.toList());
+
+            intersectionToPaint = intersections.iterator().next();
+        }
+        return intersectionToPaint;
     }
 
     private void computeDistance(Intersection i, Ray ray) {

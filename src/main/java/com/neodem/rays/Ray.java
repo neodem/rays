@@ -20,6 +20,7 @@ public class Ray {
     // angle is 0-359 with 0 being UP and 180 being DOWN
     private final float angle;
 
+    // the direction of the ray
     private final Quadrant quadrant;
 
     public Ray(float x, float y, float angle) {

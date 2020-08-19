@@ -28,7 +28,7 @@ public class RaysCanvas extends ActiveCanvas {
     // field of view (in degrees)
     private static final int VIEWPORT = 120;
 
-    protected List<Paintable> rays;
+    protected List<Paintable> rays = new ArrayList<>();
 
     protected WorldMap worldMap;
 
@@ -40,6 +40,8 @@ public class RaysCanvas extends ActiveCanvas {
     // when computing rays, this is the change of angle needed for each ray
     private final float angleTick;
 
+    private final RayComputer rayComputer;
+
     public RaysCanvas(int width, int height) {
         super(new Dimension(width, height));
         this.screenW = width;
@@ -47,13 +49,17 @@ public class RaysCanvas extends ActiveCanvas {
         this.screenHMid = screenH / 2;
         this.screenWMid = screenW / 2;
         this.angleTick = VIEWPORT / (float) screenW;
+
+        worldMap = new TestWorldMap();
+
+        playerLocation = new FloatingPoint(7.5f, 13.8f);
+        playerViewAngle = 0;
+
+        rayComputer = new RayComputer(screenW, VIEWPORT);
     }
 
     @Override
     public void init() {
-        worldMap = new TestWorldMap();
-        playerLocation = new FloatingPoint(7.5f, 13.8f);
-        playerViewAngle = 0;
     }
 
     @Override
@@ -68,56 +74,27 @@ public class RaysCanvas extends ActiveCanvas {
     }
 
     private void makeRays() {
-        rays = new ArrayList<>();
+        Collection<RayComputer.WorldRay> actualRays = rayComputer.computeRays(playerLocation, playerViewAngle);
 
-        // left view
-        for (int locX = 0; locX < screenWMid; locX++) {
-            float rayAngle = angleTick * (screenWMid - locX);
-            float angleOffset = Angles.convertLeftAngle(rayAngle, playerViewAngle);
-            PaintableRay ray = computeRay(angleOffset, playerLocation, locX);
-            rays.add(ray);
-        }
-
-        // right view
-        for (int locX = screenWMid; locX < screenW; locX++) {
-            float rayAngle = playerViewAngle + (angleTick * locX);
-            float angleOffset = Angles.convertRightAngle(rayAngle, playerViewAngle);
-            PaintableRay ray = computeRay(angleOffset, playerLocation, locX);
-            rays.add(ray);
+        rays.clear();
+        for (RayComputer.WorldRay ray : actualRays) {
+            WorldMap.Intersection intersectionToPaint = worldMap.findIntersectionToPaint(ray.ray);
+            float projectionHeight = computeHeight(intersectionToPaint.distance);
+            PaintableRay paintableRay = new PaintableRay(projectionHeight, ray.locX, screenHMid, Color.white);
+            rays.add(paintableRay);
         }
     }
 
-    private PaintableRay computeRay(float angleOffset, FloatingPoint playerLocation, int locX) {
-        PaintableRay paintableRay = null;
-
-        Ray ray = new Ray(playerLocation, angleOffset);
-        Collection<WorldMap.Intersection> intersections = worldMap.rayIntersections(ray);
-        WorldMap.Intersection intersectionToPaint;
-        if (intersections.isEmpty()) {
-            // this ray hits the edge of the world
-            // TODO fix this by making HWALL and VWALL around our world, even though right now
-            // we have a TestWorldMap that is self contained so this should never happen
-            throw new RuntimeException("World Edge Encountered");
-        } else {
-            intersections = intersections.stream()
-                    .sorted()
-                    .collect(Collectors.toList());
-
-            intersectionToPaint = intersections.iterator().next();
-        }
-
-        return makePaintableRay(intersectionToPaint, locX);
+    /**
+     * given a distance from the player, we need to draw a certain height.
+     *
+     * @param distance
+     * @return
+     */
+    private float computeHeight(float distance) {
+        // TODO placeholder here.
+        return 100 / distance;
     }
-
-    private PaintableRay makePaintableRay(WorldMap.Intersection intersection, int locX) {
-        // its here we convert the intersection into a ray. We would compute the height, the location and the
-        // bitmap to paint (based on the element type, HWALL, VWALL, etc)
-
-        float height = 100 / intersection.distance;
-
-        return new PaintableRay((int)height, locX, screenHMid, Color.white);
-    }
-
 
     private void drawRays(List<Paintable> rays, Graphics g) {
         rays.stream().forEach(r -> r.paint(g));
