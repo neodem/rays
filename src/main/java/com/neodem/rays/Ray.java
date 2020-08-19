@@ -149,20 +149,20 @@ public class Ray {
             yTransform = offset -> yBase - offset;
             xTransform = x -> x - 1;
             xBase++;
-        } else if (quadrant == Quadrant.UP_RIGHT) {
-            localAngle = angle;
+        } else if (quadrant == Quadrant.DOWN_LEFT) {
+            localAngle = angle - 180;
             yTransform = offset -> yBase + offset;
             xTransform = x -> x - 1;
             xBase++;
+        } else if (quadrant == Quadrant.UP_RIGHT) {
+            localAngle = angle;
+            yTransform = offset -> yBase - offset;
+            xTransform = x -> x + 1;
         } else if (quadrant == Quadrant.RIGHT) {
             localAngle = 90;
             yTransform = offset -> yBase + offset;
             xTransform = x -> x + 1;
-        } else if (quadrant == Quadrant.DOWN_LEFT) {
-            localAngle = angle - 180;
-            yTransform = offset -> yBase - offset;
-            xTransform = x -> x + 1;
-        } else {
+        } else { // DOWN_RIGHT
             localAngle = 180 - angle;
             yTransform = offset -> yBase + offset;
             xTransform = x -> x + 1;

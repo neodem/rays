@@ -1,19 +1,22 @@
 package com.neodem.rays;
 
 import org.assertj.core.data.Offset;
-import org.junit.After;
-import org.junit.Before;
 import org.junit.Test;
 
+import java.util.Collection;
 import java.util.List;
 
-import static org.assertj.core.api.Assertions.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * Created by Vincent Fumo (neodem@gmail.com)
  * Created on 8/12/20
  */
 public class RayTest {
+
+    private static final Logger logger = LoggerFactory.getLogger(RayTest.class);
 
     @Test
     public void constructorSetsCorrectQuadrant() {
@@ -37,23 +40,6 @@ public class RayTest {
         assertThat(floatingPoints.get(2).getY()).isCloseTo(11f, Offset.offset(.00001f));
         assertThat(floatingPoints.get(3).getX()).isCloseTo(7.5f, Offset.offset(.00001f));
         assertThat(floatingPoints.get(3).getY()).isCloseTo(10f, Offset.offset(.00001f));
-    }
-
-    @Test
-    public void intersectHorizontalShouldComputeCorrectPointsCorrectlyDown() {
-        FloatingPoint rayOrigin = new FloatingPoint(7.5f, 13.8f);
-        Ray ray = new Ray(rayOrigin, 180);
-
-        List<FloatingPoint> floatingPoints = ray.intersectWorldHorizontal(4);
-        assertThat(floatingPoints).hasSize(4);
-        assertThat(floatingPoints.get(0).getX()).isCloseTo(7.5f, Offset.offset(.00001f));
-        assertThat(floatingPoints.get(0).getY()).isCloseTo(14f, Offset.offset(.00001f));
-        assertThat(floatingPoints.get(1).getX()).isCloseTo(7.5f, Offset.offset(.00001f));
-        assertThat(floatingPoints.get(1).getY()).isCloseTo(15, Offset.offset(.00001f));
-        assertThat(floatingPoints.get(2).getX()).isCloseTo(7.5f, Offset.offset(.00001f));
-        assertThat(floatingPoints.get(2).getY()).isCloseTo(16f, Offset.offset(.00001f));
-        assertThat(floatingPoints.get(3).getX()).isCloseTo(7.5f, Offset.offset(.00001f));
-        assertThat(floatingPoints.get(3).getY()).isCloseTo(17f, Offset.offset(.00001f));
     }
 
     @Test
@@ -91,6 +77,23 @@ public class RayTest {
     }
 
     @Test
+    public void intersectHorizontalShouldComputeCorrectPointsCorrectlyDown() {
+        FloatingPoint rayOrigin = new FloatingPoint(7.5f, 13.8f);
+        Ray ray = new Ray(rayOrigin, 180);
+
+        List<FloatingPoint> floatingPoints = ray.intersectWorldHorizontal(4);
+        assertThat(floatingPoints).hasSize(4);
+        assertThat(floatingPoints.get(0).getX()).isCloseTo(7.5f, Offset.offset(.00001f));
+        assertThat(floatingPoints.get(0).getY()).isCloseTo(14f, Offset.offset(.00001f));
+        assertThat(floatingPoints.get(1).getX()).isCloseTo(7.5f, Offset.offset(.00001f));
+        assertThat(floatingPoints.get(1).getY()).isCloseTo(15, Offset.offset(.00001f));
+        assertThat(floatingPoints.get(2).getX()).isCloseTo(7.5f, Offset.offset(.00001f));
+        assertThat(floatingPoints.get(2).getY()).isCloseTo(16f, Offset.offset(.00001f));
+        assertThat(floatingPoints.get(3).getX()).isCloseTo(7.5f, Offset.offset(.00001f));
+        assertThat(floatingPoints.get(3).getY()).isCloseTo(17f, Offset.offset(.00001f));
+    }
+
+    @Test
     public void intersectHorizontalShouldComputeCorrectPointsCorrectlyDownLeft() {
         FloatingPoint rayOrigin = new FloatingPoint(7.5f, 13.8f);
         Ray ray = new Ray(rayOrigin, 202);
@@ -124,22 +127,8 @@ public class RayTest {
         assertThat(floatingPoints.get(3).getY()).isCloseTo(17f, Offset.offset(.00001f));
     }
 
-    @Test
-    public void intersectWorldVerticalShouldComputeCorrectPointsCorrectlyUpLeft() {
-        FloatingPoint rayOrigin = new FloatingPoint(7.5f, 13.8f);
-        Ray ray = new Ray(rayOrigin, 338);
 
-        List<FloatingPoint> floatingPoints = ray.intersectWorldVertical(4);
-        assertThat(floatingPoints).hasSize(4);
-        assertThat(floatingPoints.get(0).getX()).isCloseTo(7.0f, Offset.offset(.00001f));
-        assertThat(floatingPoints.get(0).getY()).isCloseTo(12.562457f, Offset.offset(.00001f));
-        assertThat(floatingPoints.get(1).getX()).isCloseTo(6.0f, Offset.offset(.00001f));
-        assertThat(floatingPoints.get(1).getY()).isCloseTo(10.08737f, Offset.offset(.00001f));
-        assertThat(floatingPoints.get(2).getX()).isCloseTo(5.0f, Offset.offset(.00001f));
-        assertThat(floatingPoints.get(2).getY()).isCloseTo(7.612283f, Offset.offset(.00001f));
-        assertThat(floatingPoints.get(3).getX()).isCloseTo(4.0f, Offset.offset(.00001f));
-        assertThat(floatingPoints.get(3).getY()).isCloseTo(5.1371965f, Offset.offset(.00001f));
-    }
+    ///// intersectWorldVertical
 
     @Test
     public void intersectWorldVerticalShouldComputeCorrectPointsCorrectlyRight() {
@@ -159,6 +148,42 @@ public class RayTest {
     }
 
     @Test
+    public void intersectWorldVerticalShouldComputeCorrectPointsCorrectlyUpRight() {
+        FloatingPoint rayOrigin = new FloatingPoint(7.5f, 13.8f);
+        Ray ray = new Ray(rayOrigin, 68);
+
+        List<FloatingPoint> floatingPoints = ray.intersectWorldVertical(4);
+        assertThat(floatingPoints).hasSize(4);
+        print(floatingPoints);
+        assertThat(floatingPoints.get(0).getX()).isCloseTo(8.0f, Offset.offset(.00001f));
+        assertThat(floatingPoints.get(0).getY()).isCloseTo(13.597987f, Offset.offset(.00001f));
+        assertThat(floatingPoints.get(1).getX()).isCloseTo(9.0f, Offset.offset(.00001f));
+        assertThat(floatingPoints.get(1).getY()).isCloseTo(13.193961f, Offset.offset(.00001f));
+        assertThat(floatingPoints.get(2).getX()).isCloseTo(10.0f, Offset.offset(.00001f));
+        assertThat(floatingPoints.get(2).getY()).isCloseTo(12.789934f, Offset.offset(.00001f));
+        assertThat(floatingPoints.get(3).getX()).isCloseTo(11.0f, Offset.offset(.00001f));
+        assertThat(floatingPoints.get(3).getY()).isCloseTo(12.385908f, Offset.offset(.00001f));
+    }
+
+    @Test
+    public void intersectWorldVerticalShouldComputeCorrectPointsCorrectlyDownRight() {
+        FloatingPoint rayOrigin = new FloatingPoint(7.5f, 13.8f);
+        Ray ray = new Ray(rayOrigin, 112);
+
+        List<FloatingPoint> floatingPoints = ray.intersectWorldVertical(4);
+        assertThat(floatingPoints).hasSize(4);
+        print(floatingPoints);
+        assertThat(floatingPoints.get(0).getX()).isCloseTo(8.0f, Offset.offset(.00001f));
+        assertThat(floatingPoints.get(0).getY()).isCloseTo(14.002013f, Offset.offset(.00001f));
+        assertThat(floatingPoints.get(1).getX()).isCloseTo(9.0f, Offset.offset(.00001f));
+        assertThat(floatingPoints.get(1).getY()).isCloseTo(14.406039f, Offset.offset(.00001f));
+        assertThat(floatingPoints.get(2).getX()).isCloseTo(10.0f, Offset.offset(.00001f));
+        assertThat(floatingPoints.get(2).getY()).isCloseTo(14.810066f, Offset.offset(.00001f));
+        assertThat(floatingPoints.get(3).getX()).isCloseTo(11.0f, Offset.offset(.00001f));
+        assertThat(floatingPoints.get(3).getY()).isCloseTo(15.214092f, Offset.offset(.00001f));
+    }
+
+    @Test
     public void intersectWorldVerticalShouldComputeCorrectPointsCorrectlyLeft() {
         FloatingPoint rayOrigin = new FloatingPoint(7.5f, 13.8f);
         Ray ray = new Ray(rayOrigin, 270);
@@ -173,6 +198,40 @@ public class RayTest {
         assertThat(floatingPoints.get(2).getY()).isCloseTo(13.8f, Offset.offset(.00001f));
         assertThat(floatingPoints.get(3).getX()).isCloseTo(4f, Offset.offset(.00001f));
         assertThat(floatingPoints.get(3).getY()).isCloseTo(13.8f, Offset.offset(.00001f));
+    }
+
+    @Test
+    public void intersectWorldVerticalShouldComputeCorrectPointsCorrectlyUpLeft() {
+        FloatingPoint rayOrigin = new FloatingPoint(7.5f, 13.8f);
+        Ray ray = new Ray(rayOrigin, 292);
+
+        List<FloatingPoint> floatingPoints = ray.intersectWorldVertical(4);
+        assertThat(floatingPoints).hasSize(4);
+        assertThat(floatingPoints.get(0).getX()).isCloseTo(7.0f, Offset.offset(.00001f));
+        assertThat(floatingPoints.get(0).getY()).isCloseTo(13.597987f, Offset.offset(.00001f));
+        assertThat(floatingPoints.get(1).getX()).isCloseTo(6.0f, Offset.offset(.00001f));
+        assertThat(floatingPoints.get(1).getY()).isCloseTo(13.193961f, Offset.offset(.00001f));
+        assertThat(floatingPoints.get(2).getX()).isCloseTo(5.0f, Offset.offset(.00001f));
+        assertThat(floatingPoints.get(2).getY()).isCloseTo(12.789934f, Offset.offset(.00001f));
+        assertThat(floatingPoints.get(3).getX()).isCloseTo(4.0f, Offset.offset(.00001f));
+        assertThat(floatingPoints.get(3).getY()).isCloseTo(12.385908f, Offset.offset(.00001f));
+    }
+
+    @Test
+    public void intersectWorldVerticalShouldComputeCorrectPointsCorrectlyDownLeft() {
+        FloatingPoint rayOrigin = new FloatingPoint(7.5f, 13.8f);
+        Ray ray = new Ray(rayOrigin, 248);
+
+        List<FloatingPoint> floatingPoints = ray.intersectWorldVertical(4);
+        assertThat(floatingPoints).hasSize(4);
+        assertThat(floatingPoints.get(0).getX()).isCloseTo(7.0f, Offset.offset(.00001f));
+        assertThat(floatingPoints.get(0).getY()).isCloseTo(14.002013f, Offset.offset(.00001f));
+        assertThat(floatingPoints.get(1).getX()).isCloseTo(6.0f, Offset.offset(.00001f));
+        assertThat(floatingPoints.get(1).getY()).isCloseTo(14.406039f, Offset.offset(.00001f));
+        assertThat(floatingPoints.get(2).getX()).isCloseTo(5.0f, Offset.offset(.00001f));
+        assertThat(floatingPoints.get(2).getY()).isCloseTo(14.810066f, Offset.offset(.00001f));
+        assertThat(floatingPoints.get(3).getX()).isCloseTo(4.0f, Offset.offset(.00001f));
+        assertThat(floatingPoints.get(3).getY()).isCloseTo(15.214092f, Offset.offset(.00001f));
     }
 
     @Test
@@ -261,10 +320,16 @@ public class RayTest {
         float distanceToFirstVertical = ray.getDistanceToClosestVertical(7.5f, Orientation.LEFT);
         assertThat(distanceToFirstVertical).isEqualTo(0.5f);
 
-        distanceToFirstVertical = ray.getDistanceToClosestVertical(7.2f,  Orientation.LEFT);
+        distanceToFirstVertical = ray.getDistanceToClosestVertical(7.2f, Orientation.LEFT);
         assertThat(distanceToFirstVertical).isCloseTo(0.2f, Offset.offset(.001f));
 
-        distanceToFirstVertical = ray.getDistanceToClosestVertical(7.8f,  Orientation.LEFT);
+        distanceToFirstVertical = ray.getDistanceToClosestVertical(7.8f, Orientation.LEFT);
         assertThat(distanceToFirstVertical).isCloseTo(0.8f, Offset.offset(.001f));
+    }
+
+    private void print(Collection<FloatingPoint> points) {
+        for(FloatingPoint p : points) {
+            logger.debug("{}", p);
+        }
     }
 }
