@@ -77,10 +77,10 @@ public class RaysCanvas extends ActiveCanvas {
         Collection<RayComputer.WorldRay> actualRays = rayComputer.computeRays(playerLocation, playerViewAngle);
 
         rays.clear();
-        for (RayComputer.WorldRay ray : actualRays) {
-            WorldMap.Intersection intersectionToPaint = worldMap.findIntersectionToPaint(ray.ray);
+        for (RayComputer.WorldRay worldRay : actualRays) {
+            WorldMap.Intersection intersectionToPaint = worldMap.findIntersectionToPaint(worldRay.ray);
             float projectionHeight = computeHeight(intersectionToPaint.distance);
-            PaintableRay paintableRay = new PaintableRay(projectionHeight, ray.locX, screenHMid, Color.white);
+            PaintableRay paintableRay = new PaintableRay(projectionHeight, worldRay.locX, screenHMid, Color.white);
             rays.add(paintableRay);
         }
     }

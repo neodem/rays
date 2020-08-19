@@ -58,8 +58,8 @@ public class Ray {
 
         List<FloatingPoint> points = new ArrayList<>();
 
-        if (quadrant == Quadrant.UP || quadrant == Quadrant.DOWN || quadrant == Quadrant.RIGHT || quadrant == Quadrant.LEFT) {
-            // for a Quadrant of UP, DOWN, LEFT, RIGHT we can't compute anything so we return the empty List
+        if (quadrant == Quadrant.RIGHT || quadrant == Quadrant.LEFT) {
+            // for a Quadrant of LEFT, RIGHT we can't compute anything so we return the empty List
             return points;
         }
 
@@ -70,7 +70,16 @@ public class Ray {
         Function<Float, Float> xTransform;
         Function<Integer, Integer> yTransform;
 
-        if (quadrant == Quadrant.UP_LEFT) {
+        if (quadrant == Quadrant.UP) {
+            localAngle = 0;
+            xTransform = offset -> xBase - offset;
+            yTransform = y -> y - 1;
+            yBase++;
+        } else if (quadrant == Quadrant.DOWN) {
+            localAngle = 0;
+            xTransform = offset -> xBase - offset;
+            yTransform = y -> y + 1;
+        } else if (quadrant == Quadrant.UP_LEFT) {
             localAngle = 360 - angle;
             xTransform = offset -> xBase - offset;
             yTransform = y -> y - 1;
@@ -118,8 +127,8 @@ public class Ray {
 
         List<FloatingPoint> points = new ArrayList<>();
 
-        if (quadrant == Quadrant.UP || quadrant == Quadrant.DOWN || quadrant == Quadrant.RIGHT || quadrant == Quadrant.LEFT) {
-            // for a Quadrant of UP, DOWN, LEFT, RIGHT we can't compute anything so we return the empty List
+        if (quadrant == Quadrant.UP || quadrant == Quadrant.DOWN) {
+            // for a Quadrant of UP, DOWN we can't compute anything so we return the empty List
             return points;
         }
 
@@ -135,11 +144,20 @@ public class Ray {
             yTransform = offset -> yBase - offset;
             xTransform = x -> x - 1;
             xBase++;
+        } else if (quadrant == Quadrant.LEFT) {
+            localAngle = 90;
+            yTransform = offset -> yBase - offset;
+            xTransform = x -> x - 1;
+            xBase++;
         } else if (quadrant == Quadrant.UP_RIGHT) {
             localAngle = angle;
             yTransform = offset -> yBase + offset;
             xTransform = x -> x - 1;
             xBase++;
+        } else if (quadrant == Quadrant.RIGHT) {
+            localAngle = 90;
+            yTransform = offset -> yBase + offset;
+            xTransform = x -> x + 1;
         } else if (quadrant == Quadrant.DOWN_LEFT) {
             localAngle = angle - 180;
             yTransform = offset -> yBase - offset;
@@ -151,7 +169,7 @@ public class Ray {
         }
 
         // compute all the offset values from the Y axis
-        float localOriginY = 1 - getDistanceToClosestVertical(xBase, Angles.orientUpDown(quadrant));
+        float localOriginY = 1 - getDistanceToClosestVertical(xBase, Angles.orientRightLeft(quadrant));
         List<Float> yValues = Angles.intersectHorizontal(localOriginY, localAngle, numberToCompute);
 
         // transpose

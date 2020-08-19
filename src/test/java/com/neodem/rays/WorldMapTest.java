@@ -41,4 +41,19 @@ public class WorldMapTest {
         assertThat(i1.elementType).isEqualTo(WorldMap.ElementType.VWALL);
         assertThat(i1.hitPoint).isCloseTo(0.08736992f, Offset.offset(.00001f));
     }
+
+    @Test
+    public void rayIntersectShouldHandleUp() {
+        Ray ray = new Ray(7.5f, 13.8f, 0);
+        Collection<WorldMap.Intersection> intersections = world.rayIntersections(ray);
+        assertThat(intersections).hasSize(4);
+
+        Iterator<WorldMap.Intersection> i = intersections.iterator();
+        WorldMap.Intersection i0 = i.next();
+        assertThat(i0.elementType).isEqualTo(WorldMap.ElementType.HWALL);
+        assertThat(i0.hitPoint).isCloseTo(0.1767788f, Offset.offset(.00001f));
+        WorldMap.Intersection i1 = i.next();
+        assertThat(i1.elementType).isEqualTo(WorldMap.ElementType.VWALL);
+        assertThat(i1.hitPoint).isCloseTo(0.08736992f, Offset.offset(.00001f));
+    }
 }
