@@ -3,6 +3,8 @@ package com.neodem.rays;
 import com.neodem.rays.graphics.ActiveCanvas;
 import com.neodem.rays.graphics.Color;
 import com.neodem.rays.graphics.Paintable;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.awt.Dimension;
 import java.awt.Graphics;
@@ -10,13 +12,14 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Random;
-import java.util.stream.Collectors;
 
 /**
  * Created by Vincent Fumo (neodem@gmail.com)
  * Created on 8/9/20
  */
 public class RaysCanvas extends ActiveCanvas {
+
+    private static final Logger logger = LoggerFactory.getLogger(RaysCanvas.class);
 
     private final static Random random = new Random(System.currentTimeMillis());
 
@@ -58,13 +61,22 @@ public class RaysCanvas extends ActiveCanvas {
         rayComputer = new RayComputer(screenW, VIEWPORT);
     }
 
+    private boolean viewChanged;
+
     @Override
     public void init() {
+        makeRays();
+        viewChanged = false;
     }
 
     @Override
     public void update(long elapsedTime) {
-        makeRays();
+//        if (viewChanged) {
+            makeRays();
+
+            // TODO change this once we can change our view.
+            viewChanged = false;
+//        }
     }
 
     @Override
@@ -74,6 +86,7 @@ public class RaysCanvas extends ActiveCanvas {
     }
 
     private void makeRays() {
+        long start = System.currentTimeMillis();
         Collection<RayComputer.WorldRay> actualRays = rayComputer.computeRays(playerLocation, playerViewAngle);
 
         rays.clear();
@@ -83,6 +96,7 @@ public class RaysCanvas extends ActiveCanvas {
             PaintableRay paintableRay = new PaintableRay(projectionHeight, worldRay.locX, screenHMid, Color.white);
             rays.add(paintableRay);
         }
+        logger.info("computed Rays : {}", (System.currentTimeMillis() - start));
     }
 
     /**
@@ -97,7 +111,9 @@ public class RaysCanvas extends ActiveCanvas {
     }
 
     private void drawRays(List<Paintable> rays, Graphics g) {
-        rays.stream().forEach(r -> r.paint(g));
+        for (Paintable r : rays) {
+            r.paint(g);
+        }
     }
 
     private void drawBackground(Graphics g) {
