@@ -8,7 +8,6 @@ import org.slf4j.LoggerFactory;
 
 import java.awt.Dimension;
 import java.awt.Graphics;
-import java.awt.Rectangle;
 import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBuffer;
@@ -136,16 +135,17 @@ public class RaysCanvas extends ActiveCanvas {
         }
 
         if (key_a) {
-            turnPlayer(-.001f);
+            turnPlayer(-.1f);
         }
 
         if (key_d) {
-            turnPlayer(.001f);
+            turnPlayer(.1f);
         }
     }
 
     private void turnPlayer(float angle) {
         playerViewAngle += angle;
+        playerViewAngle = Angles.correctAngle(playerViewAngle);
         viewChanged = true;
         logger.info("new player angle : {}", playerViewAngle);
     }
@@ -175,19 +175,19 @@ public class RaysCanvas extends ActiveCanvas {
 
     private Paintable makePaintableLine(WorldMap.ElementType elementType, float hitPoint, int projectionHeight, int locX) {
 
-        BufferedImage wall;
-        if (elementType == WorldMap.ElementType.VWALL) {
-            wall = images[0];
-        } else {
-            wall = images[2];
-        }
+//        BufferedImage wall;
+//        if (elementType == WorldMap.ElementType.VWALL) {
+//            wall = images[0];
+//        } else {
+//            wall = images[2];
+//        }
+//
+//        Raster wallRaster = wall.getData(new Rectangle(locX, 0, 1, 64));
+//        wallRaster = resizeWallRaster(wallRaster, projectionHeight);
+//
+//        WallLine wallLine = new WallLine(wallRaster, locX, screenHMid);
 
-        Raster wallRaster = wall.getData(new Rectangle(locX, 0, 1, 64));
-        wallRaster = resizeWallRaster(wallRaster, projectionHeight);
-
-        WallLine wallLine = new WallLine(wallRaster, locX, screenHMid);
-
-//        VDrawLine wallLine = new VDrawLine(projectionHeight, locX, screenHMid, Color.white);
+        VDrawLine wallLine = new VDrawLine(projectionHeight, locX, screenHMid, Color.white);
 
         return wallLine;
     }
@@ -206,7 +206,7 @@ public class RaysCanvas extends ActiveCanvas {
      */
     private int computeHeight(float distance) {
         // TODO placeholder here.
-        return 100 / (int) distance;
+        return (int) (100 / distance);
     }
 
     private void drawBackground(Graphics g) {
