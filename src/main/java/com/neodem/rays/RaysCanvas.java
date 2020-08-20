@@ -170,24 +170,25 @@ public class RaysCanvas extends ActiveCanvas {
         for (Ray r : rays) {
             WorldMap.Intersection intersectionToPaint = worldMap.findIntersectionToPaint(r);
             int projectionHeight = computeHeight(intersectionToPaint.distance);
-            screenRayLines.add(makePaintableLine(intersectionToPaint.elementType, intersectionToPaint.hitPoint, projectionHeight, i++));
+            screenRayLines.add(makePaintableLine(intersectionToPaint.elementType, intersectionToPaint.hitPointInt, projectionHeight, i++));
         }
         logger.info("computed Rays : {}", (System.currentTimeMillis() - start));
     }
 
-    private Paintable makePaintableLine(WorldMap.ElementType elementType, float hitPoint, int projectionHeight, int locX) {
+    private Paintable makePaintableLine(WorldMap.ElementType elementType, int hitPoint, int projectionHeight, int locX) {
 
-//        BufferedImage wall;
+//        SimpleImage wall;
 //        if (elementType == WorldMap.ElementType.VWALL) {
 //            wall = images[0];
 //        } else {
 //            wall = images[2];
 //        }
 //
-//        Raster wallRaster = wall.getData(new Rectangle(locX, 0, 1, 64));
-//        wallRaster = resizeWallRaster(wallRaster, projectionHeight);
+//        Color[] slice = wall.getSlice(hitPoint);
 //
-//        WallLine wallLine = new WallLine(wallRaster, locX, screenHMid);
+//        slice = resizeWallRaster(slice, projectionHeight);
+//
+//        WallLine wallLine = new WallLine(slice, locX, screenHMid);
 
         VDrawLine wallLine = new VDrawLine(projectionHeight, locX, screenHMid, Color.white);
 
@@ -195,9 +196,9 @@ public class RaysCanvas extends ActiveCanvas {
     }
 
     // resize a raster
-    private Raster resizeWallRaster(Raster wallRaster, int projectionHeight) {
-        DataBuffer fromDataBuffer = wallRaster.getDataBuffer();
-        return wallRaster;
+    private Color[] resizeWallRaster(Color[] slice, int projectionHeight) {
+        //todo;
+        return slice;
     }
 
     /**

@@ -42,6 +42,10 @@ public class SimpleImage {
         return rawData;
     }
 
+    public Color[] getSlice(int x) {
+        return colorData[x];
+    }
+
     public Color[][] getColorData() {
         return colorData;
     }
