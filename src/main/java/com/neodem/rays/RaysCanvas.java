@@ -3,6 +3,7 @@ package com.neodem.rays;
 import com.neodem.rays.graphics.ActiveCanvas;
 import com.neodem.rays.graphics.Color;
 import com.neodem.rays.graphics.Paintable;
+import com.neodem.rays.graphics.SimpleImage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -46,7 +47,7 @@ public class RaysCanvas extends ActiveCanvas {
     private boolean viewChanged;
 
     // the wall images
-    private final BufferedImage[] images;
+    private final SimpleImage[] images;
 
     // keypress states
     boolean key_w = false;
@@ -54,7 +55,7 @@ public class RaysCanvas extends ActiveCanvas {
     boolean key_s = false;
     boolean key_d = false;
 
-    public RaysCanvas(int width, int height, BufferedImage[] images) {
+    public RaysCanvas(int width, int height, SimpleImage[] images) {
         super(new Dimension(width, height));
         this.screenW = width;
         this.screenH = height;

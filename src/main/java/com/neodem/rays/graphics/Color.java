@@ -47,6 +47,10 @@ public class Color {
         createFromInputStream(is);
     }
 
+    public static Color fromInteger(int color) {
+        return null;
+    }
+
     public void createFromInputStream(InputStream is) throws IOException {
         Reader reader = new BufferedReader(new InputStreamReader(is));
         StreamTokenizer stream = new StreamTokenizer(reader);
