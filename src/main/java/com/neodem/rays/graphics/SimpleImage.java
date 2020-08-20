@@ -20,11 +20,11 @@ public class SimpleImage {
         rawData = new int[height][width];
         colorData = new Color[height][width];
 
-        for (int row = 0; row < height; row++) {
-            for (int col = 0; col < width; col++) {
-                int rgb = image.getRGB(col, row);
-                rawData[row][col] = rgb;
-                colorData[row][col] = convertRGB(rgb);
+        for (int x = 0; x < height; x++) {
+            for (int y = 0; y < width; y++) {
+                int rgb = image.getRGB(x, y);
+                rawData[x][y] = rgb;
+                colorData[x][y] = convertRGB(rgb);
             }
         }
     }

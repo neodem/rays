@@ -26,7 +26,7 @@ public class WallLine implements Paintable {
         // I'll bet this is super slow.. but it will do for now
         for (int y = 0; y < 64; y++) {
             g.setColor(pixels[y].getAWTColor());
-            g.drawRect(y + locY, locX, 1, 1);
+            g.drawRect(locX, y + locY, 1, 1);
         }
     }
 }

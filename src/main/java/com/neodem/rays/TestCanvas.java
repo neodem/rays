@@ -70,7 +70,7 @@ public class TestCanvas extends ActiveCanvas {
         for(int x=0; x<64; x++) {
             for (int y = 0; y < 64; y++) {
                 g.setColor(pixels[x][y].getAWTColor());
-                g.drawRect(y, x, 1, 1);
+                g.drawRect(x, y, 1, 1);
             }
         }
 
