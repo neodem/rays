@@ -161,8 +161,8 @@ public class RaysCanvas extends ActiveCanvas {
         for (RayComputer.WorldRay worldRay : actualRays) {
             WorldMap.Intersection intersectionToPaint = worldMap.findIntersectionToPaint(worldRay.ray);
             float projectionHeight = computeHeight(intersectionToPaint.distance);
-            PaintableRay paintableRay = new PaintableRay(projectionHeight, worldRay.locX, screenHMid, Color.white);
-            rays.add(paintableRay);
+            VDrawLine VDrawLine = new VDrawLine(projectionHeight, worldRay.locX, screenHMid, Color.white);
+            rays.add(VDrawLine);
         }
         logger.info("computed Rays : {}", (System.currentTimeMillis() - start));
     }

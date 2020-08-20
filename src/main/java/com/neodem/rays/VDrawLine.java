@@ -6,10 +6,12 @@ import com.neodem.rays.graphics.Paintable;
 import java.awt.Graphics;
 
 /**
+ * a vertical line one pixel wide of varying height aligned on a midpoint
+ * <p>
  * Created by Vincent Fumo (neodem@gmail.com)
  * Created on 8/9/20
  */
-public class PaintableRay implements Paintable {
+public class VDrawLine implements Paintable {
 
     private final float height;
     private final int locX;
@@ -18,7 +20,7 @@ public class PaintableRay implements Paintable {
 
     @Override
     public String toString() {
-        return "PaintableRay{" +
+        return "VDrawLine{" +
                 "height=" + height +
                 ", locX=" + locX +
                 ", locY=" + locY +
@@ -26,7 +28,16 @@ public class PaintableRay implements Paintable {
                 '}';
     }
 
-    public PaintableRay(float height, int locX, int midY, Color color) {
+    /**
+     * The line will be aligned at X,Y where X == locX
+     * and Y = midY - ((int) height /2)
+     *
+     * @param height the height of the line to draw
+     * @param locX   the X location
+     * @param midY   the Y midpoint of the line location
+     * @param color  the color to draw it
+     */
+    public VDrawLine(float height, int locX, int midY, Color color) {
         this.height = height;
         this.locX = locX;
         this.locY = midY - ((int) height / 2);
