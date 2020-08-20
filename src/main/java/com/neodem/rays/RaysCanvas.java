@@ -9,11 +9,7 @@ import org.slf4j.LoggerFactory;
 
 import java.awt.Dimension;
 import java.awt.Graphics;
-import java.awt.Rectangle;
 import java.awt.event.KeyEvent;
-import java.awt.image.BufferedImage;
-import java.awt.image.DataBuffer;
-import java.awt.image.Raster;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -74,7 +70,7 @@ public class RaysCanvas extends ActiveCanvas {
     @Override
     public void keyPressed(KeyEvent e) {
         String keyPressed = KeyEvent.getKeyText(e.getKeyCode());
-        logger.debug("Key Press: {}", keyPressed);
+        //    logger.debug("Key Press: {}", keyPressed);
         if ("W".equals(keyPressed)) {
             key_w = true;
         } else if ("A".equals(keyPressed)) {
@@ -89,7 +85,7 @@ public class RaysCanvas extends ActiveCanvas {
     @Override
     public void keyReleased(KeyEvent e) {
         String keyPressed = KeyEvent.getKeyText(e.getKeyCode());
-        logger.debug("Key Release: {}", keyPressed);
+        //   logger.debug("Key Release: {}", keyPressed);
         if ("W".equals(keyPressed)) {
             key_w = false;
         } else if ("A".equals(keyPressed)) {
@@ -129,11 +125,11 @@ public class RaysCanvas extends ActiveCanvas {
 
     private void handleKeys() {
         if (key_w) {
-            movePlayer(-.005f, 0);
+            movePlayer(.005f, playerViewAngle);
         }
 
         if (key_s) {
-            movePlayer(.005f, 0);
+            movePlayer(-.005f, playerViewAngle);
         }
 
         if (key_a) {
@@ -152,9 +148,10 @@ public class RaysCanvas extends ActiveCanvas {
         logger.info("new player angle : {}", playerViewAngle);
     }
 
-    private void movePlayer(float x, int y) {
-        playerLocation = playerLocation.addX(x);
-        playerLocation = playerLocation.addY(y);
+    private void movePlayer(float amount, float angle) {
+        playerLocation = playerLocation.addX(Angles.worldX(angle, amount));
+        playerLocation = playerLocation.addY(Angles.worldY(angle, amount));
+
         viewChanged = true;
         logger.info("new player location : {}", playerLocation);
     }
@@ -183,7 +180,7 @@ public class RaysCanvas extends ActiveCanvas {
             wall = images[2];
         }
 
-        int sliceNumber = (int)(64 * hitPoint);
+        int sliceNumber = (int) (64 * hitPoint);
         Color[] slice = wall.getSlice(sliceNumber);
 
         slice = resizeWallRaster(slice, projectionHeight);

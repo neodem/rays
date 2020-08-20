@@ -146,6 +146,38 @@ public class Angles {
     }
 
     /**
+     * find the distance in the X direction from some origin
+     * with a world angle given
+     *
+     * @param worldAngle
+     * @param amount
+     * @return
+     */
+    public static float worldX(float worldAngle, float amount) {
+       return worldCos(worldAngle) * amount;
+    }
+
+    /**
+     * find the distance in the Y direction from some origin
+     * with a world angle given
+     *
+     * @param worldAngle
+     * @param amount
+     * @return
+     */
+    public static float worldY(float worldAngle, float amount) {
+        return worldSin(worldAngle) * amount;
+    }
+
+    public static float worldSin(float worldAngle) {
+        return (float) Math.abs(Math.sin(worldAngle));
+    }
+
+    public static float worldCos(float worldAngle) {
+        return (float) Math.abs(Math.cos(worldAngle));
+    }
+
+    /**
      * convert from an absolute angle (like 22 degrees) to a world angle relative to the playerViewAngle to the "left" or counter-clockwise
      * eg. if the player is facing 10 and we want to transpose 22 to the left we'd want 348
      *
