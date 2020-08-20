@@ -1,5 +1,8 @@
 package com.neodem.rays;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,6 +14,7 @@ import java.util.List;
  * Created on 8/19/20
  */
 public class RayComputer {
+    private static final Logger logger = LoggerFactory.getLogger(RayComputer.class);
 
     private final int screenW;
     private final int screenWMid;
@@ -34,6 +38,8 @@ public class RayComputer {
      * @return a List of Ray objects representing the field of view for the player at this location
      */
     public List<Ray> computeRays(FloatingPoint playerLocation, float playerViewAngle) {
+        long start = System.currentTimeMillis();
+
         List<Ray> rays = new ArrayList<>();
 
         // left view
@@ -64,6 +70,7 @@ public class RayComputer {
             rays.add(new Ray(playerLocation, angleOffset));
         }
 
+        logger.info("computeRays : {}", (System.currentTimeMillis() - start));
         return rays;
     }
 }

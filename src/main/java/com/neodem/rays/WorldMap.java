@@ -1,5 +1,8 @@
 package com.neodem.rays;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.awt.Point;
 import java.util.Collection;
 import java.util.HashMap;
@@ -24,6 +27,8 @@ import static com.neodem.rays.WorldMap.ElementType.VWALL;
 
 public class WorldMap {
 
+    private static final Logger logger = LoggerFactory.getLogger(WorldMap.class);
+
     public enum ElementType {
         VWALL, HWALL
     }
@@ -43,9 +48,6 @@ public class WorldMap {
 
         // this is the intersection point on the element from the element origin location
         float hitPoint;
-
-        // this is the intersection point to the nearest int;
-        int hitPointInt;
 
         // distance from the interesection to the ray origin
         float distance;
@@ -88,7 +90,6 @@ public class WorldMap {
                                 Intersection i = new Intersection();
                                 i.elementType = HWALL;
                                 i.hitPoint = p.getXAbsolute();
-                                i.hitPointInt = (int) p.getXAbsolute();
                                 i.intersection = p;
                                 i.wallOrigin = wallOrigin;
                                 intersections.add(i);
@@ -102,7 +103,7 @@ public class WorldMap {
                                 Intersection i = new Intersection();
                                 i.elementType = VWALL;
                                 i.intersection = p;
-                                i.hitPointInt = (int) p.getYAbsolute();
+                                i.hitPoint = p.getYAbsolute();
                                 i.wallOrigin = wallOrigin;
                                 intersections.add(i);
                             }
