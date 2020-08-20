@@ -8,11 +8,13 @@ import org.slf4j.LoggerFactory;
 
 import java.awt.Dimension;
 import java.awt.Graphics;
+import java.awt.Rectangle;
 import java.awt.event.KeyEvent;
+import java.awt.image.BufferedImage;
+import java.awt.image.DataBuffer;
+import java.awt.image.Raster;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
-import java.util.Random;
 
 /**
  * Created by Vincent Fumo (neodem@gmail.com)
@@ -22,17 +24,15 @@ public class RaysCanvas extends ActiveCanvas {
 
     private static final Logger logger = LoggerFactory.getLogger(RaysCanvas.class);
 
-    private final static Random random = new Random(System.currentTimeMillis());
-
     private final int screenW;
     private final int screenH;
     private final int screenHMid;
-    private final int screenWMid;
 
     // field of view (in degrees)
     private static final int VIEWPORT = 120;
 
-    protected List<Paintable> rays = new ArrayList<>();
+    // the walls
+    protected List<Paintable> screenRayLines = new ArrayList<>();
 
     protected WorldMap worldMap;
 
@@ -41,12 +41,12 @@ public class RaysCanvas extends ActiveCanvas {
     // the direction the player is facing (0-359), 0 is up, 180 is down
     protected float playerViewAngle;
 
-    // when computing rays, this is the change of angle needed for each ray
-    private final float angleTick;
-
     private final RayComputer rayComputer;
 
     private boolean viewChanged;
+
+    // the wall images
+    private final BufferedImage[] images;
 
     // keypress states
     boolean key_w = false;
@@ -54,13 +54,13 @@ public class RaysCanvas extends ActiveCanvas {
     boolean key_s = false;
     boolean key_d = false;
 
-    public RaysCanvas(int width, int height) {
+    public RaysCanvas(int width, int height, BufferedImage[] images) {
         super(new Dimension(width, height));
         this.screenW = width;
         this.screenH = height;
         this.screenHMid = screenH / 2;
-        this.screenWMid = screenW / 2;
-        this.angleTick = VIEWPORT / (float) screenW;
+
+        this.images = images;
 
         worldMap = new TestWorldMap();
 
@@ -119,7 +119,11 @@ public class RaysCanvas extends ActiveCanvas {
     @Override
     public void draw(Graphics g) {
         drawBackground(g);
-        drawRays(rays, g);
+
+        // draw the rays
+        for (Paintable r : screenRayLines) {
+            r.paint(g);
+        }
     }
 
     private void handleKeys() {
@@ -155,16 +159,43 @@ public class RaysCanvas extends ActiveCanvas {
 
     private void updateRays() {
         long start = System.currentTimeMillis();
-        Collection<RayComputer.WorldRay> actualRays = rayComputer.computeRays(playerLocation, playerViewAngle);
 
-        rays.clear();
-        for (RayComputer.WorldRay worldRay : actualRays) {
-            WorldMap.Intersection intersectionToPaint = worldMap.findIntersectionToPaint(worldRay.ray);
-            float projectionHeight = computeHeight(intersectionToPaint.distance);
-            VDrawLine VDrawLine = new VDrawLine(projectionHeight, worldRay.locX, screenHMid, Color.white);
-            rays.add(VDrawLine);
+        // compute the rays for the players view. These will be in order from 0-ScreenW
+        List<Ray> rays = rayComputer.computeRays(playerLocation, playerViewAngle);
+
+        screenRayLines.clear();
+        int i = 0;
+        for (Ray r : rays) {
+            WorldMap.Intersection intersectionToPaint = worldMap.findIntersectionToPaint(r);
+            int projectionHeight = computeHeight(intersectionToPaint.distance);
+            screenRayLines.add(makePaintableLine(intersectionToPaint.elementType, intersectionToPaint.hitPoint, projectionHeight, i++));
         }
         logger.info("computed Rays : {}", (System.currentTimeMillis() - start));
+    }
+
+    private Paintable makePaintableLine(WorldMap.ElementType elementType, float hitPoint, int projectionHeight, int locX) {
+
+        BufferedImage wall;
+        if (elementType == WorldMap.ElementType.VWALL) {
+            wall = images[0];
+        } else {
+            wall = images[2];
+        }
+
+        Raster wallRaster = wall.getData(new Rectangle(locX, 0, 1, 64));
+        wallRaster = resizeWallRaster(wallRaster, projectionHeight);
+
+        WallLine wallLine = new WallLine(wallRaster, locX, screenHMid);
+
+//        VDrawLine wallLine = new VDrawLine(projectionHeight, locX, screenHMid, Color.white);
+
+        return wallLine;
+    }
+
+    // resize a raster
+    private Raster resizeWallRaster(Raster wallRaster, int projectionHeight) {
+        DataBuffer fromDataBuffer = wallRaster.getDataBuffer();
+        return wallRaster;
     }
 
     /**
@@ -173,15 +204,9 @@ public class RaysCanvas extends ActiveCanvas {
      * @param distance
      * @return
      */
-    private float computeHeight(float distance) {
+    private int computeHeight(float distance) {
         // TODO placeholder here.
-        return 100 / distance;
-    }
-
-    private void drawRays(List<Paintable> rays, Graphics g) {
-        for (Paintable r : rays) {
-            r.paint(g);
-        }
+        return 100 / (int) distance;
     }
 
     private void drawBackground(Graphics g) {
