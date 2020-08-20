@@ -64,21 +64,14 @@ public abstract class ActiveCanvas extends JPanel implements Runnable, KeyListen
 
     @Override
     public void keyTyped(KeyEvent e) {
-        logger.debug("{}", e);
     }
 
     @Override
     public void keyPressed(KeyEvent e) {
-        logger.debug("{}", e);
-        keyPressed = KeyEvent.getKeyText(e.getKeyCode());
-        keyReleased = null;
     }
 
     @Override
     public void keyReleased(KeyEvent e) {
-        logger.debug("{}", e);
-        keyReleased = KeyEvent.getKeyText(e.getKeyCode());
-        keyPressed = null;
     }
 
     public final void start() {

@@ -16,6 +16,16 @@ public class PaintableRay implements Paintable {
     private final int locY;
     private final Color color;
 
+    @Override
+    public String toString() {
+        return "PaintableRay{" +
+                "height=" + height +
+                ", locX=" + locX +
+                ", locY=" + locY +
+                ", color=" + color +
+                '}';
+    }
+
     public PaintableRay(float height, int locX, int midY, Color color) {
         this.height = height;
         this.locX = locX;

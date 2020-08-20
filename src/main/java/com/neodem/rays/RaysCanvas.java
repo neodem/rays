@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 
 import java.awt.Dimension;
 import java.awt.Graphics;
+import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -45,6 +46,14 @@ public class RaysCanvas extends ActiveCanvas {
 
     private final RayComputer rayComputer;
 
+    private boolean viewChanged;
+
+    // keypress states
+    boolean key_w = false;
+    boolean key_a = false;
+    boolean key_s = false;
+    boolean key_d = false;
+
     public RaysCanvas(int width, int height) {
         super(new Dimension(width, height));
         this.screenW = width;
@@ -61,36 +70,49 @@ public class RaysCanvas extends ActiveCanvas {
         rayComputer = new RayComputer(screenW, VIEWPORT);
     }
 
-    private boolean viewChanged;
+    @Override
+    public void keyPressed(KeyEvent e) {
+        String keyPressed = KeyEvent.getKeyText(e.getKeyCode());
+        logger.debug("Key Press: {}", keyPressed);
+        if ("W".equals(keyPressed)) {
+            key_w = true;
+        } else if ("A".equals(keyPressed)) {
+            key_a = true;
+        } else if ("S".equals(keyPressed)) {
+            key_s = true;
+        } else if ("D".equals(keyPressed)) {
+            key_d = true;
+        }
+    }
+
+    @Override
+    public void keyReleased(KeyEvent e) {
+        String keyPressed = KeyEvent.getKeyText(e.getKeyCode());
+        logger.debug("Key Release: {}", keyPressed);
+        if ("W".equals(keyPressed)) {
+            key_w = false;
+        } else if ("A".equals(keyPressed)) {
+            key_a = false;
+        } else if ("S".equals(keyPressed)) {
+            key_s = false;
+        } else if ("D".equals(keyPressed)) {
+            key_d = false;
+        }
+    }
 
     @Override
     public void init() {
-        makeRays();
+        updateRays();
         viewChanged = false;
     }
 
     @Override
     public void update(long elapsedTime, String kp, String kr) {
-        handleKeys(kp, kr);
+        handleKeys();
 
         if (viewChanged) {
-            makeRays();
+            updateRays();
             viewChanged = false;
-        }
-    }
-
-    private void handleKeys(String kp, String kr) {
-        if (kp != null) {
-            logger.info("key pressed '{}'" + kp);
-            if ("W".equals(kp)) {
-                playerLocation = playerLocation.addX(-0.001f);
-            } else if ("S".equals(kp)) {
-                playerLocation = playerLocation.addX(.001f);
-            }
-
-            viewChanged = true;
-
-            logger.info("new player location : {}", playerLocation);
         }
     }
 
@@ -100,7 +122,38 @@ public class RaysCanvas extends ActiveCanvas {
         drawRays(rays, g);
     }
 
-    private void makeRays() {
+    private void handleKeys() {
+        if (key_w) {
+            movePlayer(-.005f, 0);
+        }
+
+        if (key_s) {
+            movePlayer(.005f, 0);
+        }
+
+        if (key_a) {
+            turnPlayer(-.001f);
+        }
+
+        if (key_d) {
+            turnPlayer(.001f);
+        }
+    }
+
+    private void turnPlayer(float angle) {
+        playerViewAngle += angle;
+        viewChanged = true;
+        logger.info("new player angle : {}", playerViewAngle);
+    }
+
+    private void movePlayer(float x, int y) {
+        playerLocation = playerLocation.addX(x);
+        playerLocation = playerLocation.addY(y);
+        viewChanged = true;
+        logger.info("new player location : {}", playerLocation);
+    }
+
+    private void updateRays() {
         long start = System.currentTimeMillis();
         Collection<RayComputer.WorldRay> actualRays = rayComputer.computeRays(playerLocation, playerViewAngle);
 
@@ -140,6 +193,4 @@ public class RaysCanvas extends ActiveCanvas {
         g.setColor(Color.lightBlue.getAWTColor());
         g.fillRect(0, 0, screenW, screenHMid);
     }
-
-
 }
