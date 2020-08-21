@@ -137,11 +137,11 @@ public class RaysCanvas extends ActiveCanvas {
         }
 
         if (key_a) {
-            turnPlayer(-7f);
+            turnPlayer(-10f);
         }
 
         if (key_d) {
-            turnPlayer(7f);
+            turnPlayer(10f);
         }
     }
 
@@ -173,8 +173,7 @@ public class RaysCanvas extends ActiveCanvas {
         columns.clear();
         int i = 0;
         for (Ray r : rays) {
-            Collection<WorldMap.Intersection> intersections = worldMap.rayIntersections(r);
-            WorldMap.Intersection intersectionToPaint = intersections.stream().sorted().collect(Collectors.toList()).get(0);
+            WorldMap.Intersection intersectionToPaint = worldMap.findIntersectionToPaint(r);
             int projectionHeight = computeHeight(intersectionToPaint.distance);
             Paintable paintable = makeWallColumn(intersectionToPaint.elementType, intersectionToPaint.hitPoint, projectionHeight, i);
             columns.add(paintable);
