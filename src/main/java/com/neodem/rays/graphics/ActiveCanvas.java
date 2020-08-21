@@ -1,6 +1,5 @@
 package com.neodem.rays.graphics;
 
-import com.neodem.rays.RaysCanvas;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -212,7 +211,12 @@ public abstract class ActiveCanvas extends JPanel implements Runnable, KeyListen
         backBufferGraphics.setColor(Color.white);
         backBufferGraphics.fillRect(0, 0, getWidth(), getHeight());
 
+        long start = System.currentTimeMillis();
         draw(gc2D);
+        long time = System.currentTimeMillis() - start;
+        if (logger.isDebugEnabled()) {
+            logger.debug("drawTime: " + time);
+        }
 
         // Rendering Hints restore...
         gc2D.setRenderingHints(savedRenderHints);
