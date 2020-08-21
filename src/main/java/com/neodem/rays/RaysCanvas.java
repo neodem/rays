@@ -3,7 +3,6 @@ package com.neodem.rays;
 import com.neodem.rays.graphics.ActiveCanvas;
 import com.neodem.rays.graphics.Color;
 import com.neodem.rays.graphics.Paintable;
-import com.neodem.rays.graphics.SimpleImage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -29,7 +28,7 @@ public class RaysCanvas extends ActiveCanvas {
     private static final int VIEWPORT = 120;
 
     // the walls
-    protected List<Paintable> screenRayLines = new ArrayList<>();
+    protected List<Paintable> columns = new ArrayList<>();
 
     protected WorldMap worldMap;
 
@@ -118,7 +117,10 @@ public class RaysCanvas extends ActiveCanvas {
         drawBackground(g);
 
         // draw the rays
-        for (Paintable r : screenRayLines) {
+        for (Paintable r : columns) {
+//            if (logger.isDebugEnabled()) {
+//                logger.debug("drawing: " + r);
+//            }
             r.paint(g);
         }
     }
@@ -162,17 +164,17 @@ public class RaysCanvas extends ActiveCanvas {
         // compute the rays for the players view. These will be in order from 0-ScreenW
         List<Ray> rays = rayComputer.computeRays(playerLocation, playerViewAngle);
 
-        screenRayLines.clear();
+        columns.clear();
         int i = 0;
         for (Ray r : rays) {
             WorldMap.Intersection intersectionToPaint = worldMap.findIntersectionToPaint(r);
             int projectionHeight = computeHeight(intersectionToPaint.distance);
-            screenRayLines.add(makePaintableLine(intersectionToPaint.elementType, intersectionToPaint.hitPoint, projectionHeight, i++));
+            columns.add(makeWallColumn(intersectionToPaint.elementType, intersectionToPaint.hitPoint, projectionHeight, i++));
         }
         logger.info("updateRays : {}", (System.currentTimeMillis() - start));
     }
 
-    private Paintable makePaintableLine(WorldMap.ElementType elementType, float hitPoint, int projectionHeight, int locX) {
+    private Paintable makeWallColumn(WorldMap.ElementType elementType, float hitPoint, int projectionHeight, int locX) {
         WallImage wall;
         if (elementType == WorldMap.ElementType.VWALL) {
             wall = wallImages[0];
@@ -181,19 +183,9 @@ public class RaysCanvas extends ActiveCanvas {
         }
 
         int sliceNumber = (int) (64 * hitPoint);
-        Color[] slice = wall.getSlice(sliceNumber);
+        Color[] slice = wall.getSlice(sliceNumber, projectionHeight);
 
-        slice = resizeWallRaster(slice, projectionHeight);
-
-        WallLine wallLine = new WallLine(slice, locX, screenHMid);
-
-        return wallLine;
-    }
-
-    // resize a raster
-    private Color[] resizeWallRaster(Color[] slice, int projectionHeight) {
-        //todo;
-        return slice;
+        return new WallColumn(slice, locX, screenHMid);
     }
 
     /**

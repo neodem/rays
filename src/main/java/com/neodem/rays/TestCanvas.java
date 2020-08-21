@@ -71,7 +71,7 @@ public class TestCanvas extends ActiveCanvas {
 
         // this will draw the image, using my wall line technique
         for(int x=0; x<32; x++) {
-            WallLine line = new WallLine(pixels[x], x+100, 100);
+            WallColumn line = new WallColumn(pixels[x], x+100, 100);
             line.paint(g);
         }
     }
