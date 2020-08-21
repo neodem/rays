@@ -129,19 +129,19 @@ public class RaysCanvas extends ActiveCanvas {
 
     private void handleKeys() {
         if (key_w) {
-            movePlayer(.005f, playerViewAngle);
+            movePlayer(.02f, playerViewAngle);
         }
 
         if (key_s) {
-            movePlayer(-.005f, playerViewAngle);
+            movePlayer(-.02f, playerViewAngle);
         }
 
         if (key_a) {
-            turnPlayer(-.1f);
+            turnPlayer(-7f);
         }
 
         if (key_d) {
-            turnPlayer(.1f);
+            turnPlayer(7f);
         }
     }
 
@@ -153,8 +153,8 @@ public class RaysCanvas extends ActiveCanvas {
     }
 
     private void movePlayer(float amount, float angle) {
-        playerLocation = playerLocation.addX(Angles.worldX(angle, amount));
-        playerLocation = playerLocation.addY(Angles.worldY(angle, amount));
+        playerLocation = playerLocation.addY(Angles.worldX(angle, amount));
+        playerLocation = playerLocation.addX(Angles.worldY(angle, amount));
 
         viewChanged = true;
         logger.debug("new player location : {}", playerLocation);
@@ -211,7 +211,7 @@ public class RaysCanvas extends ActiveCanvas {
     private int computeHeight(float distance) {
         // TODO placeholder here.
         //   return (int) ((screenH / 2) / distance + 1);
-        return (int) (100 / distance);
+        return (int) (110 / distance);
     }
 
     private void drawBackground(Graphics g) {
