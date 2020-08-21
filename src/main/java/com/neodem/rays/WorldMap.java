@@ -59,8 +59,22 @@ public class WorldMap {
         Point wallOrigin;
 
         @Override
+        public String toString() {
+            return "Intersection{" +
+                    "elementType=" + elementType +
+                    ", hitPoint=" + hitPoint +
+                    ", distance=" + distance +
+                    ", intersection=" + intersection +
+                    ", wallOrigin=" + wallOrigin +
+                    '}';
+        }
+
+        @Override
         public int compareTo(Intersection o) {
-            return (int) (distance - o.distance);
+            float diff = distance - o.distance;
+            if(diff<0) return -1;
+            if(diff>0) return 1;
+            return 0;
         }
     }
 

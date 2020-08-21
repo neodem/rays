@@ -10,7 +10,9 @@ import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Created by Vincent Fumo (neodem@gmail.com)
@@ -147,7 +149,7 @@ public class RaysCanvas extends ActiveCanvas {
         playerViewAngle += angle;
         playerViewAngle = Angles.correctAngle(playerViewAngle);
         viewChanged = true;
-        logger.info("new player angle : {}", playerViewAngle);
+        logger.debug("new player angle : {}", playerViewAngle);
     }
 
     private void movePlayer(float amount, float angle) {
@@ -155,11 +157,15 @@ public class RaysCanvas extends ActiveCanvas {
         playerLocation = playerLocation.addY(Angles.worldY(angle, amount));
 
         viewChanged = true;
-        logger.info("new player location : {}", playerLocation);
+        logger.debug("new player location : {}", playerLocation);
     }
 
     private void updateRays() {
         long start = System.currentTimeMillis();
+
+        if (logger.isDebugEnabled()) {
+            logger.debug("player: {}, angle: {}", playerLocation, playerViewAngle);
+        }
 
         // compute the rays for the players view. These will be in order from 0-ScreenW
         List<Ray> rays = rayComputer.computeRays(playerLocation, playerViewAngle);
@@ -167,11 +173,19 @@ public class RaysCanvas extends ActiveCanvas {
         columns.clear();
         int i = 0;
         for (Ray r : rays) {
-            WorldMap.Intersection intersectionToPaint = worldMap.findIntersectionToPaint(r);
+            Collection<WorldMap.Intersection> intersections = worldMap.rayIntersections(r);
+            WorldMap.Intersection intersectionToPaint = intersections.stream().sorted().collect(Collectors.toList()).get(0);
             int projectionHeight = computeHeight(intersectionToPaint.distance);
-            columns.add(makeWallColumn(intersectionToPaint.elementType, intersectionToPaint.hitPoint, projectionHeight, i++));
+            Paintable paintable = makeWallColumn(intersectionToPaint.elementType, intersectionToPaint.hitPoint, projectionHeight, i);
+            columns.add(paintable);
+            if (logger.isDebugEnabled())
+                logger.debug("{} {},{},height:{},{}", i, r, intersectionToPaint, projectionHeight, paintable);
+            i++;
         }
-        logger.info("updateRays : {}", (System.currentTimeMillis() - start));
+
+        if (logger.isDebugEnabled()) {
+            logger.debug("updateRays() : {}", (System.currentTimeMillis() - start));
+        }
     }
 
     private Paintable makeWallColumn(WorldMap.ElementType elementType, float hitPoint, int projectionHeight, int locX) {

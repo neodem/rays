@@ -56,4 +56,11 @@ public class WorldMapTest {
         assertThat(i1.elementType).isEqualTo(WorldMap.ElementType.VWALL);
         assertThat(i1.hitPoint).isCloseTo(0.08736992f, Offset.offset(.00001f));
     }
+
+    @Test
+    public void intersectToPaint() {
+        WorldMap.Intersection intersectionToPaint = world.findIntersectionToPaint(new Ray(7.5f, 13.8f, 302.4375f));
+        assertThat(intersectionToPaint.elementType).isEqualTo(WorldMap.ElementType.VWALL);
+        assertThat(intersectionToPaint.hitPoint).isCloseTo(.48223114f, Offset.offset(.00001f));
+    }
 }

@@ -214,8 +214,8 @@ public abstract class ActiveCanvas extends JPanel implements Runnable, KeyListen
         long start = System.currentTimeMillis();
         draw(gc2D);
         long time = System.currentTimeMillis() - start;
-        if (logger.isDebugEnabled()) {
-            logger.debug("drawTime: " + time);
+        if (logger.isTraceEnabled()) {
+            logger.trace("drawTime: " + time);
         }
 
         // Rendering Hints restore...
