@@ -196,6 +196,7 @@ public class RaysCanvas extends ActiveCanvas {
      */
     private int computeHeight(float distance) {
         // TODO placeholder here.
+        //   return (int) ((screenH / 2) / distance + 1);
         return (int) (100 / distance);
     }
 
