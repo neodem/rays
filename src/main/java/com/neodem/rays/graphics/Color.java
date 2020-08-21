@@ -1,19 +1,16 @@
 package com.neodem.rays.graphics;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.Reader;
-import java.io.StreamTokenizer;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
-public class Color {
+public class Color implements Cloneable {
 
-    public int r;
-    public int g;
-    public int b;
+    private final int r;
+    private final int g;
+    private final int b;
+    private final int rgb;
 
-    protected java.awt.Color baseColor;
+    protected java.awt.Color awtColor;
 
     public static final Color black = new Color(0, 0, 0);
     public static final Color yellow = new Color(255, 255, 0);
@@ -40,43 +37,63 @@ public class Color {
         this.g = g;
         this.b = b;
 
-        baseColor = new java.awt.Color(r, g, b);
+        this.rgb = (0x000000ff & ((char) b << 0)) |
+                (0x0000ff00 & ((char) g << 8)) |
+                (0x00ff0000 & ((char) r << 16));
+
+        awtColor = new java.awt.Color(r, g, b);
     }
 
-    public Color(InputStream is) throws IOException {
-        createFromInputStream(is);
+    public Color(int rgb) {
+        int alpha = (rgb >> 24) & 0xFF;
+        int red = (rgb >> 16) & 0xFF;
+        int green = (rgb >> 8) & 0xFF;
+        int blue = (rgb) & 0xFF;
+
+        this.r = red;
+        this.g = green;
+        this.b = blue;
+
+        this.rgb = rgb;
+
+        awtColor = new java.awt.Color(r, g, b);
     }
 
-    public static Color fromInteger(int color) {
-        return null;
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Color color = (Color) o;
+
+        return new EqualsBuilder()
+                .append(r, color.r)
+                .append(g, color.g)
+                .append(b, color.b)
+                .isEquals();
     }
 
-    public void createFromInputStream(InputStream is) throws IOException {
-        Reader reader = new BufferedReader(new InputStreamReader(is));
-        StreamTokenizer stream = new StreamTokenizer(reader);
-        stream.commentChar('#');
-
-        stream.nextToken();
-        r = (int) stream.nval;
-        stream.nextToken();
-        g = (int) stream.nval;
-        stream.nextToken();
-        b = (int) stream.nval;
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder(17, 37)
+                .append(r)
+                .append(g)
+                .append(b)
+                .toHashCode();
     }
 
-    public String getStringRepresentation() {
-        StringBuffer buffer = new StringBuffer();
-        buffer.append(" ");
-        buffer.append(r);
-        buffer.append(" ");
-        buffer.append(g);
-        buffer.append(" ");
-        buffer.append(b);
-        buffer.append(" ");
-        return buffer.toString();
+    @Override
+    public String toString() {
+        return "Color{" +
+                "r=" + r +
+                ", g=" + g +
+                ", b=" + b +
+                ", rgb=" + rgb +
+                '}';
     }
 
-    public Color makeClone() {
+    public Color clone() {
         return new Color(r, g, b);
     }
 
@@ -84,7 +101,22 @@ public class Color {
      * @return Returns the baseColor.
      */
     public java.awt.Color getAWTColor() {
-        return baseColor;
+        return awtColor;
     }
 
+    public int getR() {
+        return r;
+    }
+
+    public int getG() {
+        return g;
+    }
+
+    public int getB() {
+        return b;
+    }
+
+    public int getRgb() {
+        return rgb;
+    }
 }

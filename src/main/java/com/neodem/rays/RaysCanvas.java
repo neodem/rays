@@ -43,7 +43,7 @@ public class RaysCanvas extends ActiveCanvas {
     private boolean viewChanged;
 
     // the wall images
-    private final SimpleImage[] images;
+    private final WallImage[] wallImages;
 
     // keypress states
     boolean key_w = false;
@@ -51,13 +51,13 @@ public class RaysCanvas extends ActiveCanvas {
     boolean key_s = false;
     boolean key_d = false;
 
-    public RaysCanvas(int width, int height, SimpleImage[] images) {
+    public RaysCanvas(int width, int height, WallImage[] wallImages) {
         super(new Dimension(width, height));
         this.screenW = width;
         this.screenH = height;
         this.screenHMid = screenH / 2;
 
-        this.images = images;
+        this.wallImages = wallImages;
 
         worldMap = new TestWorldMap();
 
@@ -173,11 +173,11 @@ public class RaysCanvas extends ActiveCanvas {
     }
 
     private Paintable makePaintableLine(WorldMap.ElementType elementType, float hitPoint, int projectionHeight, int locX) {
-        SimpleImage wall;
+        WallImage wall;
         if (elementType == WorldMap.ElementType.VWALL) {
-            wall = images[0];
+            wall = wallImages[0];
         } else {
-            wall = images[2];
+            wall = wallImages[2];
         }
 
         int sliceNumber = (int) (64 * hitPoint);

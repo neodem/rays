@@ -11,7 +11,7 @@ import java.awt.Graphics;
  * Created by Vincent Fumo (neodem@gmail.com)
  * Created on 8/9/20
  */
-public class VDrawLine implements Paintable {
+public class FilledColumn implements Paintable {
 
     private final float height;
     private final int locX;
@@ -37,7 +37,7 @@ public class VDrawLine implements Paintable {
      * @param midY   the Y midpoint of the line location
      * @param color  the color to draw it
      */
-    public VDrawLine(float height, int locX, int midY, Color color) {
+    public FilledColumn(float height, int locX, int midY, Color color) {
         this.height = height;
         this.locX = locX;
         this.locY = midY - ((int) height / 2);

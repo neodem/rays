@@ -9,13 +9,8 @@ import org.slf4j.LoggerFactory;
 
 import java.awt.Dimension;
 import java.awt.Graphics;
-import java.awt.event.KeyEvent;
-import java.awt.image.BufferedImage;
 import java.awt.image.DataBuffer;
-import java.awt.image.DataBufferByte;
 import java.awt.image.Raster;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by Vincent Fumo (neodem@gmail.com)
@@ -96,7 +91,7 @@ public class TestCanvas extends ActiveCanvas {
 //
 //        WallLine wallLine = new WallLine(wallRaster, locX, screenHMid);
 
-        VDrawLine wallLine = new VDrawLine(projectionHeight, locX, screenHMid, Color.white);
+        FilledColumn wallLine = new FilledColumn(projectionHeight, locX, screenHMid, Color.white);
 
         return wallLine;
     }

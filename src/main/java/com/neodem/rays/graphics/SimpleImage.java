@@ -12,11 +12,14 @@ public class SimpleImage {
     private Color[][] colorData;
     private final BufferedImage image;
 
+    private final int width;
+    private final int height;
+
     public SimpleImage(BufferedImage image) {
         this.image = image;
 
-        int width = image.getWidth();
-        int height = image.getHeight();
+        width = image.getWidth();
+        height = image.getHeight();
         rawData = new int[height][width];
         colorData = new Color[height][width];
 
@@ -24,26 +27,13 @@ public class SimpleImage {
             for (int y = 0; y < width; y++) {
                 int rgb = image.getRGB(x, y);
                 rawData[x][y] = rgb;
-                colorData[x][y] = convertRGB(rgb);
+                colorData[x][y] = new Color(rgb);
             }
         }
     }
 
-    private Color convertRGB(int rgb) {
-        int alpha = (rgb >> 24) & 0xFF;
-        int red = (rgb >> 16) & 0xFF;
-        int green = (rgb >> 8) & 0xFF;
-        int blue = (rgb) & 0xFF;
-
-        return new Color(red, green, blue);
-    }
-
     public int[][] getRawData() {
         return rawData;
-    }
-
-    public Color[] getSlice(int x) {
-        return colorData[x];
     }
 
     public Color[][] getColorData() {
@@ -52,5 +42,13 @@ public class SimpleImage {
 
     public BufferedImage getImage() {
         return image;
+    }
+
+    public int getHeight() {
+        return height;
+    }
+
+    public int getWidth() {
+        return width;
     }
 }
