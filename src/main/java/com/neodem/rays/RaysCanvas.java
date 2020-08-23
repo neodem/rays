@@ -128,12 +128,12 @@ public class RaysCanvas extends ActiveCanvas {
     public void draw(Graphics g) {
         drawBackground(g);
 
-        // draw the rays
-        for (Paintable r : columns) {
+        // draw the walls
+        for (Paintable c : columns) {
 //            if (logger.isDebugEnabled()) {
 //                logger.debug("drawing: " + r);
 //            }
-            r.paint(g);
+            c.paint(g);
         }
     }
 

@@ -217,6 +217,14 @@ public class Angles {
         return correctAngle(absAngle);
     }
 
+    public static float convertFromWorldAngle(float worldAngle) {
+        float corrected = correctAngle(worldAngle);
+        if(corrected > 270) return corrected - 270;
+        if(corrected > 180) return corrected - 180;
+        if(corrected > 90) return corrected - 90;
+        return corrected;
+    }
+
     /**
      * correct the angle to be from [0-360)
      *

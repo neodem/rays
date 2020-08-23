@@ -9,7 +9,6 @@ import java.util.Collection;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -76,8 +75,8 @@ public class WorldMap {
         @Override
         public int compareTo(Intersection o) {
             float diff = distance - o.distance;
-            if(diff<0) return -1;
-            if(diff>0) return 1;
+            if (diff < 0) return -1;
+            if (diff > 0) return 1;
             return 0;
         }
     }
@@ -160,22 +159,65 @@ public class WorldMap {
         return intersectionToPaint;
     }
 
-    private void computeDistance(Intersection i, Ray ray) {
-        // compute the distance to the hitPoint from the playerLocation
-        // TODO consider the fisheye effect
+    /**
+     * compute distance from the intersection to the rayOrigin
+     *
+     * @param i
+     * @param ray
+     */
+    protected void computeDistance(Intersection i, Ray ray) {
+        float d = computeDistanceTraditional(i.intersection.getX(), i.intersection.getY(), ray.getOrigin().getX(), ray.getOrigin().getY());
 
-        // temp.
-        float x1 = i.intersection.getX();
-        float y1 = i.intersection.getY();
+        //TODO fix this!
+//        float angle = Angles.convertFromWorldAngle(ray.getViewAngle());
+//        float d = computeDistanceFisheyeCorrection(i.intersection.getX(), i.intersection.getY(), ray.getOrigin().getX(), ray.getOrigin().getY(), angle);
 
-        float x2 = ray.getOrigin().getX();
-        float y2 = ray.getOrigin().getY();
+        i.distance = d;
+    }
 
-        float xs = (x1 - x2) * (x1 - x2);
-        float ys = (y1 - y2) * (y1 - y2);
+    /**
+     * fisheye correction
+     *
+     * @param x1
+     * @param y1
+     * @param x2
+     * @param y2
+     * @param angle
+     * @return
+     */
+    protected float computeDistanceFisheyeCorrection(float x1, float y1, float x2, float y2, float angle) {
+        float dx = x1 - x2;
+        float dy = y1 - y2;
+
+        if(angle == 0) return Math.abs(dx);
+        if(angle == 90) return Float.POSITIVE_INFINITY;
+
+
+        double a = Math.abs(dx * Math.cos(angle));
+        double b = Math.abs(dy * Math.sin(angle));
+
+        return (float) (a + b);
+    }
+
+    /**
+     * pythagorys method
+     *
+     * @param x1
+     * @param y1
+     * @param x2
+     * @param y2
+     * @return
+     */
+    protected float computeDistanceTraditional(float x1, float y1, float x2, float y2) {
+        float dx = x1 - x2;
+        float dy = y1 - y2;
+
+        float xs = dx * dx;
+        float ys = dy * dy;
         float m = xs + ys;
 
-        i.distance = (float) Math.sqrt(m);
+        float d = (float) Math.sqrt(m);
+        return d;
     }
 
     private boolean outOfBounds(FloatingPoint point) {
@@ -200,7 +242,6 @@ public class WorldMap {
     }
 
 
-
     public void removeElement(ElementType type, int x, int y) {
         if (x < 0) throw new IllegalArgumentException("x (" + x + ") may not be less than zero");
         if (y < 0) throw new IllegalArgumentException("y (" + y + ") may not be less than zero");
@@ -213,7 +254,7 @@ public class WorldMap {
 
         Collection<Point> points = data.get(type);
         if (points != null) {
-            if(points.contains(remove)) points.remove(remove);
+            if (points.contains(remove)) points.remove(remove);
         }
     }
 

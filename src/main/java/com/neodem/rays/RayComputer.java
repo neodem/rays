@@ -53,7 +53,7 @@ public class RayComputer {
             float angleOffset = Angles.convertLeftAngle(rayAngle, playerViewAngle);
 
             // add it to the collection
-            rays.add(new Ray(playerLocation, angleOffset));
+            rays.add(new Ray(playerLocation, angleOffset, playerViewAngle));
         }
 
         // right view
@@ -67,7 +67,7 @@ public class RayComputer {
             float angleOffset = Angles.convertRightAngle(rayAngle, playerViewAngle);
 
             // add it to the collection
-            rays.add(new Ray(playerLocation, angleOffset));
+            rays.add(new Ray(playerLocation, angleOffset, playerViewAngle));
         }
 
         logger.info("computeRays : {}", (System.currentTimeMillis() - start));

@@ -120,7 +120,7 @@ public class WorldMapTest {
 
     @Test
     public void rayIntersect() {
-        Ray ray = new Ray(7.5f, 13.8f, 360 - 22);
+        Ray ray = new Ray(7.5f, 13.8f, 360 - 22, 0);
         Collection<WorldMap.Intersection> intersections = world.rayIntersections(ray);
         assertThat(intersections).hasSize(2);
 
@@ -135,7 +135,7 @@ public class WorldMapTest {
 
     @Test
     public void rayIntersectShouldHandleUp() {
-        Ray ray = new Ray(7.5f, 13.8f, 0);
+        Ray ray = new Ray(7.5f, 13.8f, 0, 0);
         Collection<WorldMap.Intersection> intersections = world.rayIntersections(ray);
         assertThat(intersections).hasSize(4);
 
@@ -150,8 +150,29 @@ public class WorldMapTest {
 
     @Test
     public void intersectToPaint() {
-        WorldMap.Intersection intersectionToPaint = world.findIntersectionToPaint(new Ray(7.5f, 13.8f, 302.4375f));
+        WorldMap.Intersection intersectionToPaint = world.findIntersectionToPaint(new Ray(7.5f, 13.8f, 302.4375f, 0));
         assertThat(intersectionToPaint.elementType).isEqualTo(WorldMap.ElementType.VWALL);
         assertThat(intersectionToPaint.hitPoint).isCloseTo(.48223114f, Offset.offset(.00001f));
+    }
+
+    @Test
+    public void computeDistanceTraditionalShouldWorkAsExpected() {
+        float d = world.computeDistanceTraditional(0, 0, 77, 100);
+        assertThat(d).isCloseTo(126.210144f, Offset.offset(.0001f));
+    }
+
+    @Test
+    public void computeDistanceFisheyeShouldWorkAsExpected() {
+        float d = world.computeDistanceFisheyeCorrection(0, 0, 77, 100, 20.5f);
+        assertThat(d).isCloseTo(105.80937f, Offset.offset(.0001f));
+
+        d = world.computeDistanceFisheyeCorrection(77, 100, 0, 0, 20.5f);
+        assertThat(d).isCloseTo(105.80937f, Offset.offset(.0001f));
+
+        d = world.computeDistanceFisheyeCorrection(77, 100, 0, 0, 0f);
+        assertThat(d).isCloseTo(77.0f, Offset.offset(.0001f));
+
+        d = world.computeDistanceFisheyeCorrection(77, 100, 0, 0, 90f);
+        assertThat(d).isCloseTo(Float.POSITIVE_INFINITY, Offset.offset(.0001f));
     }
 }
