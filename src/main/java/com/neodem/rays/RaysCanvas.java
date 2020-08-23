@@ -233,7 +233,7 @@ public class RaysCanvas extends ActiveCanvas {
         int sliceNumber = (int) (64 * hitPoint);
         Color[] slice = wall.getSlice(sliceNumber, projectionHeight);
 
-        return new WallColumn(slice, locX, screenHMid);
+        return new WallColumn(slice, locX, screenHMid, screenH);
     }
 
     /**
