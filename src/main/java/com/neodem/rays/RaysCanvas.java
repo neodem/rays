@@ -10,9 +10,7 @@ import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * Created by Vincent Fumo (neodem@gmail.com)
@@ -155,6 +153,11 @@ public class RaysCanvas extends ActiveCanvas {
     private void movePlayer(float amount, float angle) {
         playerLocation = playerLocation.addY(Angles.worldX(angle, amount));
         playerLocation = playerLocation.addX(Angles.worldY(angle, amount));
+
+        if (playerLocation.getX() < 0) playerLocation = new FloatingPoint(0, playerLocation.getY());
+        if (playerLocation.getX() > screenW) playerLocation = new FloatingPoint(screenW, playerLocation.getY());
+        if (playerLocation.getY() < 0) playerLocation = new FloatingPoint(playerLocation.getX(), 0);
+        if (playerLocation.getY() > screenH) playerLocation = new FloatingPoint(playerLocation.getX(), screenH);
 
         viewChanged = true;
         logger.debug("new player location : {}", playerLocation);
