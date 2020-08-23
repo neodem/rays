@@ -4,7 +4,6 @@ import com.neodem.rays.graphics.Color;
 import com.neodem.rays.graphics.Paintable;
 
 import java.awt.Graphics;
-import java.util.Arrays;
 
 /**
  * Created by Vincent Fumo (neodem@gmail.com)
@@ -36,7 +35,7 @@ public class WallColumn implements Paintable {
         // I'll bet this is super slow.. but it will do for now
         for (int y = 0; y < pixels.length; y++) {
             g.setColor(pixels[y].getAWTColor());
-            g.drawRect(locX, y + locY, 1, 1);
+            g.drawLine(locX, y + locY, locX, y + locY);
         }
     }
 }
