@@ -25,7 +25,7 @@ public class RaysCanvas extends ActiveCanvas {
     private final int screenHMid;
 
     // field of view (in degrees)
-    private static final int VIEWPORT = 120;
+    private static final int VIEWPORT = 124;
 
     // the walls
     protected List<Paintable> columns = new ArrayList<>();
@@ -49,6 +49,10 @@ public class RaysCanvas extends ActiveCanvas {
     boolean key_a = false;
     boolean key_s = false;
     boolean key_d = false;
+
+    // temp special keys
+    boolean key_r = false;
+    boolean key_t = false;
 
     public RaysCanvas(int width, int height, WallImage[] wallImages) {
         super(new Dimension(width, height));
@@ -78,6 +82,10 @@ public class RaysCanvas extends ActiveCanvas {
             key_s = true;
         } else if ("D".equals(keyPressed)) {
             key_d = true;
+        } else if ("R".equals(keyPressed)) {
+            key_r = true;
+        } else if ("T".equals(keyPressed)) {
+            key_t = true;
         }
     }
 
@@ -93,6 +101,10 @@ public class RaysCanvas extends ActiveCanvas {
             key_s = false;
         } else if ("D".equals(keyPressed)) {
             key_d = false;
+        } else if ("R".equals(keyPressed)) {
+            key_r = false;
+        } else if ("T".equals(keyPressed)) {
+            key_t = false;
         }
     }
 
@@ -141,13 +153,33 @@ public class RaysCanvas extends ActiveCanvas {
         if (key_d) {
             turnPlayer(10f);
         }
+
+        // reset location
+        if (key_r) {
+            playerLocation = new FloatingPoint(7.5f, 13.8f);
+            playerViewAngle = 0;
+            viewChanged = true;
+            logPlayer();
+        }
+
+        // test location
+        if (key_t) {
+            playerLocation = new FloatingPoint(7.7f, 13.2f);
+            playerViewAngle = 310;
+            viewChanged = true;
+            logPlayer();
+        }
+    }
+
+    private void logPlayer() {
+        logger.debug("new player location, angle: {}, location: {}", playerViewAngle, playerLocation);
     }
 
     private void turnPlayer(float angle) {
         playerViewAngle += angle;
         playerViewAngle = Angles.correctAngle(playerViewAngle);
         viewChanged = true;
-        logger.debug("new player angle : {}", playerViewAngle);
+        logPlayer();
     }
 
     private void movePlayer(float amount, float angle) {
@@ -160,7 +192,7 @@ public class RaysCanvas extends ActiveCanvas {
         if (playerLocation.getY() > screenH) playerLocation = new FloatingPoint(playerLocation.getX(), screenH);
 
         viewChanged = true;
-        logger.debug("new player location : {}", playerLocation);
+        logPlayer();
     }
 
     private void updateRays() {

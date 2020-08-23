@@ -13,7 +13,7 @@ public class TestWorldMap extends WorldMap {
         addWalls(ElementType.HWALL, 7, 9, 3);
         addWalls(ElementType.VWALL, 7, 7, 2);
         addWalls(ElementType.VWALL, 10, 7, 2);
-        removeElement(ElementType.HWALL, 9, 8);
+        removeElement(ElementType.HWALL, 8, 9);
 
         // room 2
         addWalls(ElementType.HWALL,  2, 9, 3);
@@ -26,7 +26,7 @@ public class TestWorldMap extends WorldMap {
         addWalls(ElementType.HWALL,  10, 10, 3);
         addWalls(ElementType.HWALL,  10, 12, 3);
         addWalls(ElementType.VWALL,  10, 10, 2);
-        addWalls(ElementType.VWALL,  12, 10, 2);
+        addWalls(ElementType.VWALL,  13, 10, 2);
         removeElement(ElementType.VWALL, 10, 10);
 
         // room 4
@@ -37,6 +37,12 @@ public class TestWorldMap extends WorldMap {
         removeElement(ElementType.VWALL, 10, 10);
         removeElement(ElementType.VWALL, 6, 12);
         removeElement(ElementType.HWALL, 7, 13);
+        removeElement(ElementType.HWALL, 8, 10);
+
+        // start room
+        addElement(ElementType.VWALL, 7, 13);
+        addElement(ElementType.VWALL, 8, 13);
+        addElement(ElementType.HWALL, 7, 14);
 
         // hall 1
         addElement(ElementType.VWALL, 8, 9);
@@ -48,12 +54,6 @@ public class TestWorldMap extends WorldMap {
 
         // hall 3
         addWalls(ElementType.HWALL,  4, 12, 2);
-        addWalls(ElementType.VWALL,  3, 13, 4);
-
-        // start room
-        addElement(ElementType.VWALL, 7, 13);
-        addElement(ElementType.VWALL, 8, 13);
-        addElement(ElementType.HWALL, 7, 14);
-
+        addWalls(ElementType.HWALL,  3, 13, 4);
     }
 }

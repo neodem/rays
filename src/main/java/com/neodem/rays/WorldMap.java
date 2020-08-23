@@ -4,10 +4,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.awt.Point;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -28,6 +31,7 @@ import static com.neodem.rays.WorldMap.ElementType.VWALL;
 public class WorldMap {
 
     private static final Logger logger = LoggerFactory.getLogger(WorldMap.class);
+
 
     public enum ElementType {
         VWALL, HWALL
@@ -195,6 +199,8 @@ public class WorldMap {
         data.put(type, points);
     }
 
+
+
     public void removeElement(ElementType type, int x, int y) {
         if (x < 0) throw new IllegalArgumentException("x (" + x + ") may not be less than zero");
         if (y < 0) throw new IllegalArgumentException("y (" + y + ") may not be less than zero");
@@ -207,12 +213,7 @@ public class WorldMap {
 
         Collection<Point> points = data.get(type);
         if (points != null) {
-            Iterator<Point> iterator = points.iterator();
-            while (iterator.hasNext()) {
-                Point next = iterator.next();
-                if (next.equals(remove)) iterator.remove();
-                break;
-            }
+            if(points.contains(remove)) points.remove(remove);
         }
     }
 
@@ -231,5 +232,17 @@ public class WorldMap {
     public void addWalls(WorldMap.ElementType type, int xStart, int yStart, int num) {
         if (type == HWALL) addHWalls(xStart, yStart, num);
         if (type == VWALL) addVWalls(xStart, yStart, num);
+    }
+
+    public List<Point> getElements(ElementType type) {
+        List<Point> points = new ArrayList();
+        points.addAll(data.get(type));
+        points.sort(Comparator.comparingInt(o -> o.x));
+
+        return points;
+    }
+
+    public void clearElements(ElementType elementType) {
+        data.put(elementType, new HashSet<>());
     }
 }
