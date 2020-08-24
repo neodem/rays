@@ -99,4 +99,28 @@ public class AnglesTest {
         assertThat(xValues.get(2)).isCloseTo(6.187717f, Offset.offset(.00001f));
         assertThat(xValues.get(3)).isCloseTo(8.662804f, Offset.offset(.00001f));
     }
+
+    @Test
+    public void computeDistanceTraditionalShouldWorkAsExpected() {
+        float d = Angles.computeDistanceTraditional(0, 0, 77, 100);
+        assertThat(d).isCloseTo(126.210144f, Offset.offset(.0001f));
+    }
+
+    @Test
+    public void computeDistanceFisheyeShouldWorkAsExpected() {
+        float d = Angles.computeDistanceFisheyeCorrection(9, 11, 1, 0, 30f);
+        assertThat(d).isCloseTo(13.5263f, Offset.offset(.0001f));
+
+        d = Angles.computeDistanceFisheyeCorrection(9, 11, 0, 8, 30f);
+        assertThat(d).isCloseTo(7.0981f, Offset.offset(.0001f));
+
+        d = Angles.computeDistanceFisheyeCorrection(9, 11, 15, 0, 30f);
+        assertThat(d).isCloseTo(12.5263f, Offset.offset(.0001f));
+
+        d = Angles.computeDistanceFisheyeCorrection(9, 11, 15, 0, 0f);
+        assertThat(d).isCloseTo(11f, Offset.offset(.0001f));
+
+        d = Angles.computeDistanceFisheyeCorrection(9, 11, 1, 0, 90f);
+        assertThat(d).isCloseTo(8f, Offset.offset(.0001f));
+    }
 }

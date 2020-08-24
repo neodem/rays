@@ -154,25 +154,4 @@ public class WorldMapTest {
         assertThat(intersectionToPaint.elementType).isEqualTo(WorldMap.ElementType.VWALL);
         assertThat(intersectionToPaint.hitPoint).isCloseTo(.48223114f, Offset.offset(.00001f));
     }
-
-    @Test
-    public void computeDistanceTraditionalShouldWorkAsExpected() {
-        float d = world.computeDistanceTraditional(0, 0, 77, 100);
-        assertThat(d).isCloseTo(126.210144f, Offset.offset(.0001f));
-    }
-
-    @Test
-    public void computeDistanceFisheyeShouldWorkAsExpected() {
-        float d = world.computeDistanceFisheyeCorrection(0, 0, 77, 100, 20.5f);
-        assertThat(d).isCloseTo(105.80937f, Offset.offset(.0001f));
-
-        d = world.computeDistanceFisheyeCorrection(77, 100, 0, 0, 20.5f);
-        assertThat(d).isCloseTo(105.80937f, Offset.offset(.0001f));
-
-        d = world.computeDistanceFisheyeCorrection(77, 100, 0, 0, 0f);
-        assertThat(d).isCloseTo(77.0f, Offset.offset(.0001f));
-
-        d = world.computeDistanceFisheyeCorrection(77, 100, 0, 0, 90f);
-        assertThat(d).isCloseTo(Float.POSITIVE_INFINITY, Offset.offset(.0001f));
-    }
 }

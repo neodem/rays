@@ -166,59 +166,16 @@ public class WorldMap {
      * @param ray
      */
     protected void computeDistance(Intersection i, Ray ray) {
-        float d = computeDistanceTraditional(i.intersection.getX(), i.intersection.getY(), ray.getOrigin().getX(), ray.getOrigin().getY());
+//        float d = Angles.computeDistanceTraditional(i.intersection.getX(), i.intersection.getY(), ray.getOrigin().getX(), ray.getOrigin().getY());
 
-        //TODO fix this!
-//        float angle = Angles.convertFromWorldAngle(ray.getViewAngle());
-//        float d = computeDistanceFisheyeCorrection(i.intersection.getX(), i.intersection.getY(), ray.getOrigin().getX(), ray.getOrigin().getY(), angle);
+
+        float angle = Angles.worldAngleToZeroAxis(ray.getViewAngle());
+        float d = Angles.computeDistanceFisheyeCorrection(i.intersection.getX(), i.intersection.getY(), ray.getOrigin().getX(), ray.getOrigin().getY(), angle);
 
         i.distance = d;
     }
 
-    /**
-     * fisheye correction
-     *
-     * @param x1
-     * @param y1
-     * @param x2
-     * @param y2
-     * @param angle
-     * @return
-     */
-    protected float computeDistanceFisheyeCorrection(float x1, float y1, float x2, float y2, float angle) {
-        float dx = x1 - x2;
-        float dy = y1 - y2;
 
-        if(angle == 0) return Math.abs(dx);
-        if(angle == 90) return Float.POSITIVE_INFINITY;
-
-
-        double a = Math.abs(dx * Math.cos(angle));
-        double b = Math.abs(dy * Math.sin(angle));
-
-        return (float) (a + b);
-    }
-
-    /**
-     * pythagorys method
-     *
-     * @param x1
-     * @param y1
-     * @param x2
-     * @param y2
-     * @return
-     */
-    protected float computeDistanceTraditional(float x1, float y1, float x2, float y2) {
-        float dx = x1 - x2;
-        float dy = y1 - y2;
-
-        float xs = dx * dx;
-        float ys = dy * dy;
-        float m = xs + ys;
-
-        float d = (float) Math.sqrt(m);
-        return d;
-    }
 
     private boolean outOfBounds(FloatingPoint point) {
         return (point.getY() > 0 && point.getY() <= mapHeight && point.getX() > 0 && point.getX() <= mapWidth);

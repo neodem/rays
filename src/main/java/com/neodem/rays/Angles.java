@@ -154,7 +154,69 @@ public class Angles {
      * @return
      */
     public static float worldX(float worldAngle, float amount) {
-       return worldCos(worldAngle) * amount;
+        return worldCos(worldAngle) * amount;
+    }
+
+    /**
+     * fisheye correction
+     *
+     * @param origin
+     * @param intersection
+     * @param angle
+     * @return
+     */
+    public static float computeDistanceFisheyeCorrection(FloatingPoint origin, FloatingPoint intersection, float angle) {
+        return computeDistanceFisheyeCorrection(origin.getX(), origin.getY(), intersection.getX(), intersection.getY(), angle);
+    }
+
+    /**
+     * fisheye correction
+     *
+     * @param x1
+     * @param y1
+     * @param x2
+     * @param y2
+     * @param angle
+     * @return
+     */
+    public static float computeDistanceFisheyeCorrection(float x1, float y1, float x2, float y2, float angle) {
+        if (angle < 0) throw new IllegalArgumentException("angle should be positive");
+        if (angle > 90) throw new IllegalArgumentException("angle may not be greater than 90");
+
+        float dy = Math.abs(y1 - y2);
+        float dx = Math.abs(x1 - x2);
+
+        if (angle == 0) return dy;
+        if (angle == 90) return dx;
+
+        double cos = Math.cos(Math.toRadians(angle));
+        double sin = Math.sin(Math.toRadians(angle));
+
+        double a = dy * cos;
+        double b = dx * sin;
+
+        return (float) (a + b);
+    }
+
+    /**
+     * pythagorys method
+     *
+     * @param x1
+     * @param y1
+     * @param x2
+     * @param y2
+     * @return
+     */
+    public static float computeDistanceTraditional(float x1, float y1, float x2, float y2) {
+        float dx = x1 - x2;
+        float dy = y1 - y2;
+
+        float xs = dx * dx;
+        float ys = dy * dy;
+        float m = xs + ys;
+
+        float d = (float) Math.sqrt(m);
+        return d;
     }
 
     /**
@@ -217,11 +279,11 @@ public class Angles {
         return correctAngle(absAngle);
     }
 
-    public static float convertFromWorldAngle(float worldAngle) {
+    public static float worldAngleToZeroAxis(float worldAngle) {
         float corrected = correctAngle(worldAngle);
-        if(corrected > 270) return corrected - 270;
-        if(corrected > 180) return corrected - 180;
-        if(corrected > 90) return corrected - 90;
+        if (corrected > 270) return 360 - corrected;
+        if (corrected > 180) return corrected - 180;
+        if (corrected > 90) return 180 - corrected;
         return corrected;
     }
 

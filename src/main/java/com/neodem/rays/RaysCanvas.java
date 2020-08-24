@@ -54,7 +54,9 @@ public class RaysCanvas extends ActiveCanvas {
     boolean key_r = false;
     boolean key_t = false;
 
-    public RaysCanvas(int width, int height, WallImage[] wallImages) {
+    boolean debug = false;
+
+    public RaysCanvas(int width, int height, WallImage[] wallImages, boolean debug) {
         super(new Dimension(width, height));
         this.screenW = width;
         this.screenH = height;
@@ -68,6 +70,8 @@ public class RaysCanvas extends ActiveCanvas {
         playerViewAngle = 0;
 
         rayComputer = new RayComputer(screenW, VIEWPORT);
+
+        this.debug = debug;
     }
 
     @Override
@@ -134,6 +138,20 @@ public class RaysCanvas extends ActiveCanvas {
 //                logger.debug("drawing: " + r);
 //            }
             c.paint(g);
+        }
+
+        if (debug) {
+            drawGrid(g);
+        }
+    }
+
+    private void drawGrid(Graphics g) {
+        int step = 100;
+        int x = 0;
+        g.setColor(Color.red.getAWTColor());
+        while (x < screenW) {
+            g.drawLine(x, 0, x, screenH);
+            x = x + step;
         }
     }
 
