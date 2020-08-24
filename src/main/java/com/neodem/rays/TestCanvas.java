@@ -1,6 +1,6 @@
 package com.neodem.rays;
 
-import com.neodem.rays.graphics.ActiveCanvas;
+import com.neodem.rays.graphics.ComplexCanvas;
 import com.neodem.rays.graphics.Color;
 import com.neodem.rays.graphics.Paintable;
 import com.neodem.rays.graphics.SimpleImage;
@@ -16,7 +16,7 @@ import java.awt.image.Raster;
  * Created by Vincent Fumo (neodem@gmail.com)
  * Created on 8/20/20
  */
-public class TestCanvas extends ActiveCanvas {
+public class TestCanvas extends ComplexCanvas {
 
     private static final Logger logger = LoggerFactory.getLogger(RaysCanvas.class);
 

@@ -1,6 +1,6 @@
 package com.neodem.rays;
 
-import com.neodem.rays.graphics.ActiveCanvas;
+import com.neodem.rays.graphics.ComplexCanvas;
 import com.neodem.rays.graphics.AppFrame;
 
 /**
@@ -19,8 +19,9 @@ public class Rays {
         images[2] = new WallImage(Utils.loadPngFromClasspath("hwall-0.png"));
         images[3] = new WallImage(Utils.loadPngFromClasspath("hwall-1.png"));
 
-        ActiveCanvas panel = new RaysCanvas(APP_WIDTH, APP_HEIGHT, images);
+        ComplexCanvas panel = new RaysCanvas(APP_WIDTH, APP_HEIGHT, images);
         //      ActiveCanvas panel = new TestCanvas(APP_WIDTH, APP_HEIGHT, images);
+
         AppFrame appFrame = new AppFrame(APP_NAME, panel);
         appFrame.start();
     }

@@ -1,6 +1,6 @@
 package com.neodem.rays;
 
-import com.neodem.rays.graphics.ActiveCanvas;
+import com.neodem.rays.graphics.ComplexCanvas;
 import com.neodem.rays.graphics.Color;
 import com.neodem.rays.graphics.Paintable;
 import org.slf4j.Logger;
@@ -16,7 +16,7 @@ import java.util.List;
  * Created by Vincent Fumo (neodem@gmail.com)
  * Created on 8/9/20
  */
-public class RaysCanvas extends ActiveCanvas {
+public class RaysCanvas extends ComplexCanvas {
 
     private static final Logger logger = LoggerFactory.getLogger(RaysCanvas.class);
 
