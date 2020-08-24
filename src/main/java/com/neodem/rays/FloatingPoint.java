@@ -26,7 +26,7 @@ public class FloatingPoint {
     }
 
     public FloatingPoint addY(float y) {
-        return new FloatingPoint(this.x, this.y - y);
+        return new FloatingPoint(this.x, this.y +y);
     }
 
     public boolean isYRelativelyEqualTo(float compare) {

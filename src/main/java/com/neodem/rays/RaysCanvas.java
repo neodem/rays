@@ -45,16 +45,13 @@ public class RaysCanvas extends ActiveCanvas {
     private final WallImage[] wallImages;
 
     // keypress states
-    boolean key_w = false;
-    boolean key_a = false;
-    boolean key_s = false;
-    boolean key_d = false;
+    private boolean key_w = false;
+    private boolean key_a = false;
+    private boolean key_s = false;
+    private boolean key_d = false;
+    private boolean key_r = false;
 
-    // temp special keys
-    boolean key_r = false;
-    boolean key_t = false;
-
-    boolean debug = false;
+    private final boolean debug;
 
     public RaysCanvas(int width, int height, WallImage[] wallImages, boolean debug) {
         super(new Dimension(width, height));
@@ -88,8 +85,6 @@ public class RaysCanvas extends ActiveCanvas {
             key_d = true;
         } else if ("R".equals(keyPressed)) {
             key_r = true;
-        } else if ("T".equals(keyPressed)) {
-            key_t = true;
         }
     }
 
@@ -107,8 +102,6 @@ public class RaysCanvas extends ActiveCanvas {
             key_d = false;
         } else if ("R".equals(keyPressed)) {
             key_r = false;
-        } else if ("T".equals(keyPressed)) {
-            key_t = false;
         }
     }
 
@@ -157,11 +150,11 @@ public class RaysCanvas extends ActiveCanvas {
 
     private void handleKeys() {
         if (key_w) {
-            movePlayer(.02f, playerViewAngle);
+            movePlayer(.05f, playerViewAngle);
         }
 
         if (key_s) {
-            movePlayer(-.02f, playerViewAngle);
+            movePlayer(-.05f, playerViewAngle);
         }
 
         if (key_a) {
@@ -179,14 +172,6 @@ public class RaysCanvas extends ActiveCanvas {
             viewChanged = true;
             logPlayer();
         }
-
-        // test location
-        if (key_t) {
-            playerLocation = new FloatingPoint(7.7f, 13.2f);
-            playerViewAngle = 310;
-            viewChanged = true;
-            logPlayer();
-        }
     }
 
     private void logPlayer() {
@@ -200,9 +185,18 @@ public class RaysCanvas extends ActiveCanvas {
         logPlayer();
     }
 
+    /**
+     * transpose the player in world space
+     *
+     * @param amount
+     * @param angle
+     */
     private void movePlayer(float amount, float angle) {
-        playerLocation = playerLocation.addY(Angles.worldX(angle, amount));
-        playerLocation = playerLocation.addX(Angles.worldY(angle, amount));
+        float y = Angles.worldY(angle, amount);
+        float x = Angles.worldX(angle, amount);
+
+        playerLocation = playerLocation.addY(y);
+        playerLocation = playerLocation.addX(x);
 
         if (playerLocation.getX() < 0) playerLocation = new FloatingPoint(0, playerLocation.getY());
         if (playerLocation.getX() > screenW) playerLocation = new FloatingPoint(screenW, playerLocation.getY());

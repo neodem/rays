@@ -14,10 +14,10 @@ public class Rays {
 
     private Rays() {
         WallImage[] images = new WallImage[4];
-        images[0] = new WallImage(Utils.loadPngFromClasspath("vwall-0.png"));
-        images[1] = new WallImage(Utils.loadPngFromClasspath("vwall-1.png"));
-        images[2] = new WallImage(Utils.loadPngFromClasspath("hwall-0.png"));
-        images[3] = new WallImage(Utils.loadPngFromClasspath("hwall-1.png"));
+        images[0] = new WallImage(Utils.loadPngFromClasspath("hwall-0.png"));
+        images[1] = new WallImage(Utils.loadPngFromClasspath("hwall-1.png"));
+        images[2] = new WallImage(Utils.loadPngFromClasspath("vwall-0.png"));
+        images[3] = new WallImage(Utils.loadPngFromClasspath("vwall-1.png"));
 
         ActiveCanvas panel = new RaysCanvas(APP_WIDTH, APP_HEIGHT, images, true);
         //      ActiveCanvas panel = new TestCanvas(APP_WIDTH, APP_HEIGHT, images);

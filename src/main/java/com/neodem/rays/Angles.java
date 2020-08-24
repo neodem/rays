@@ -1,7 +1,11 @@
 package com.neodem.rays;
 
+
+
 import java.util.ArrayList;
 import java.util.List;
+
+
 
 /**
  * Created by Vincent Fumo (neodem@gmail.com)
@@ -145,17 +149,6 @@ public class Angles {
         return points;
     }
 
-    /**
-     * find the distance in the X direction from some origin
-     * with a world angle given
-     *
-     * @param worldAngle
-     * @param amount
-     * @return
-     */
-    public static float worldX(float worldAngle, float amount) {
-        return worldCos(worldAngle) * amount;
-    }
 
     /**
      * fisheye correction
@@ -228,16 +221,45 @@ public class Angles {
      * @return
      */
     public static float worldY(float worldAngle, float amount) {
-        return worldSin(worldAngle) * amount;
+        Quadrant q = determineQuadrant(worldAngle);
+        if(q == Quadrant.UP) return -amount;
+        if(q == Quadrant.DOWN) return amount;
+        if(q == Quadrant.RIGHT || q == Quadrant.LEFT) return 0;
+
+        double sin = Math.sin(Math.toRadians(worldAngle));
+
+        if(q == Quadrant.UP_RIGHT) return (float) -(sin * amount);
+        if(q == Quadrant.DOWN_RIGHT) return (float) (sin * amount);
+        if(q == Quadrant.UP_LEFT) return (float) (sin * amount);
+
+        return (float) -(sin * amount);
     }
 
-    public static float worldSin(float worldAngle) {
-        return (float) Math.abs(Math.sin(worldAngle));
+
+    /**
+     * find the distance in the X direction from some origin
+     * with a world angle given
+     *
+     * @param worldAngle
+     * @param amount
+     * @return
+     */
+    public static float worldX(float worldAngle, float amount) {
+        Quadrant q = determineQuadrant(worldAngle);
+        if(q == Quadrant.RIGHT) return amount;
+        if(q == Quadrant.LEFT) return -amount;
+        if(q == Quadrant.UP || q == Quadrant.DOWN) return 0;
+
+        double cos = Math.cos(Math.toRadians(worldAngle));
+
+        if(q == Quadrant.UP_RIGHT) return (float) (cos * amount);
+        if(q == Quadrant.DOWN_RIGHT) return (float) (-cos * amount);
+        if(q == Quadrant.UP_LEFT) return (float) (-cos * amount);
+
+        return (float) (cos * amount);
     }
 
-    public static float worldCos(float worldAngle) {
-        return (float) Math.abs(Math.cos(worldAngle));
-    }
+
 
     /**
      * convert from an absolute angle (like 22 degrees) to a world angle relative to the playerViewAngle to the "left" or counter-clockwise

@@ -168,14 +168,11 @@ public class WorldMap {
     protected void computeDistance(Intersection i, Ray ray) {
 //        float d = Angles.computeDistanceTraditional(i.intersection.getX(), i.intersection.getY(), ray.getOrigin().getX(), ray.getOrigin().getY());
 
-
         float angle = Angles.worldAngleToZeroAxis(ray.getViewAngle());
         float d = Angles.computeDistanceFisheyeCorrection(i.intersection.getX(), i.intersection.getY(), ray.getOrigin().getX(), ray.getOrigin().getY(), angle);
 
         i.distance = d;
     }
-
-
 
     private boolean outOfBounds(FloatingPoint point) {
         return (point.getY() > 0 && point.getY() <= mapHeight && point.getX() > 0 && point.getX() <= mapWidth);
