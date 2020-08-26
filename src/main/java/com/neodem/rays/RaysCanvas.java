@@ -20,12 +20,15 @@ public class RaysCanvas extends ActiveCanvas {
 
     private static final Logger logger = LoggerFactory.getLogger(RaysCanvas.class);
 
+    private static final float DELTA_MOVE = 0.05f;
+    private static final float DELTA_TURN = 5;
+
     private final int screenW;
     private final int screenH;
     private final int screenHMid;
 
     // field of view (in degrees)
-    private static final int VIEWPORT = 124;
+    private static final int VIEWPORT = 90;
 
     // the walls
     protected List<Paintable> columns = new ArrayList<>();
@@ -53,7 +56,7 @@ public class RaysCanvas extends ActiveCanvas {
 
     private final boolean debug;
 
-    public RaysCanvas(int width, int height, WallImage[] wallImages, boolean debug) {
+    public RaysCanvas(int width, int height, WallImage[] wallImages) {
         super(new Dimension(width, height));
         this.screenW = width;
         this.screenH = height;
@@ -67,8 +70,9 @@ public class RaysCanvas extends ActiveCanvas {
         playerViewAngle = 0;
 
         rayComputer = new RayComputer(screenW, VIEWPORT);
-
-        this.debug = debug;
+        if (logger.isDebugEnabled())
+            this.debug = true;
+        else this.debug = false;
     }
 
     @Override
@@ -107,7 +111,7 @@ public class RaysCanvas extends ActiveCanvas {
 
     @Override
     public void init() {
-        updateRays();
+        computeColumns();
         viewChanged = false;
     }
 
@@ -116,7 +120,7 @@ public class RaysCanvas extends ActiveCanvas {
         handleKeys();
 
         if (viewChanged) {
-            updateRays();
+            computeColumns();
             viewChanged = false;
         }
     }
@@ -134,11 +138,11 @@ public class RaysCanvas extends ActiveCanvas {
         }
 
         if (debug) {
-            drawGrid(g);
+            drawDebugGrid(g);
         }
     }
 
-    private void drawGrid(Graphics g) {
+    private void drawDebugGrid(Graphics g) {
         int step = 100;
         int x = 0;
         g.setColor(Color.red.getAWTColor());
@@ -150,19 +154,19 @@ public class RaysCanvas extends ActiveCanvas {
 
     private void handleKeys() {
         if (key_w) {
-            movePlayer(.05f, playerViewAngle);
+            movePlayer(DELTA_MOVE, playerViewAngle);
         }
 
         if (key_s) {
-            movePlayer(-.05f, playerViewAngle);
+            movePlayer(-DELTA_MOVE, playerViewAngle);
         }
 
         if (key_a) {
-            turnPlayer(-10f);
+            turnPlayer(-DELTA_TURN);
         }
 
         if (key_d) {
-            turnPlayer(10f);
+            turnPlayer(DELTA_TURN);
         }
 
         // reset location
@@ -175,7 +179,7 @@ public class RaysCanvas extends ActiveCanvas {
     }
 
     private void logPlayer() {
-        logger.debug("new player location, angle: {}, location: {}", playerViewAngle, playerLocation);
+        logger.info("new player location, angle: {}, location: {}", playerViewAngle, playerLocation);
     }
 
     private void turnPlayer(float angle) {
@@ -192,6 +196,8 @@ public class RaysCanvas extends ActiveCanvas {
      * @param angle
      */
     private void movePlayer(float amount, float angle) {
+        logger.info("move player {} at {}", amount, angle);
+
         float y = Angles.worldY(angle, amount);
         float x = Angles.worldX(angle, amount);
 
@@ -207,7 +213,7 @@ public class RaysCanvas extends ActiveCanvas {
         logPlayer();
     }
 
-    private void updateRays() {
+    private void computeColumns() {
         long start = System.currentTimeMillis();
 
         if (logger.isDebugEnabled()) {
@@ -221,7 +227,7 @@ public class RaysCanvas extends ActiveCanvas {
         int i = 0;
         for (Ray r : rays) {
             WorldMap.Intersection intersectionToPaint = worldMap.findIntersectionToPaint(r);
-            int projectionHeight = computeHeight(intersectionToPaint.distance);
+            int projectionHeight = (int) (240 / intersectionToPaint.distance);
             Paintable paintable = makeWallColumn(intersectionToPaint.elementType, intersectionToPaint.hitPoint, projectionHeight, i);
             columns.add(paintable);
             if (logger.isDebugEnabled())
@@ -230,7 +236,7 @@ public class RaysCanvas extends ActiveCanvas {
         }
 
         if (logger.isDebugEnabled()) {
-            logger.debug("updateRays() : {}", (System.currentTimeMillis() - start));
+            logger.debug("updateRays() : {}ms", (System.currentTimeMillis() - start));
         }
     }
 
@@ -246,16 +252,6 @@ public class RaysCanvas extends ActiveCanvas {
         Color[] slice = wall.getSlice(sliceNumber, projectionHeight);
 
         return new WallColumn(slice, locX, screenHMid, screenH);
-    }
-
-    /**
-     * given a distance from the player, we need to draw a certain height.
-     *
-     * @param distance
-     * @return
-     */
-    private int computeHeight(float distance) {
-        return (int) (240 / distance);
     }
 
     private void drawBackground(Graphics g) {
