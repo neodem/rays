@@ -1,5 +1,7 @@
 package com.neodem.rays;
 
+import com.neodem.rays.maths.Angles;
+import com.neodem.rays.maths.Rays;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -92,8 +94,8 @@ public class WorldMap {
     public Collection<Intersection> rayIntersections(Ray ray) {
 
         // collect all possible intersections
-        Collection<FloatingPoint> possiblePoints = ray.intersectWorldHorizontal(mapHeight);
-        possiblePoints.addAll(ray.intersectWorldVertical(mapWidth));
+        Collection<FloatingPoint> possiblePoints = Rays.intersectWorldHorizontal(ray, mapHeight);
+        possiblePoints.addAll(Rays.intersectWorldVertical(ray, mapWidth));
 
         Collection<Point> hWallOrigins = data.get(HWALL);
         Collection<Point> vWallOrigins = data.get(VWALL);

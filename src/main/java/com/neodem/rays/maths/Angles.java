@@ -1,10 +1,12 @@
-package com.neodem.rays;
+package com.neodem.rays.maths;
 
 
+import com.neodem.rays.FloatingPoint;
+import com.neodem.rays.Orientation;
+import com.neodem.rays.Quadrant;
 
 import java.util.ArrayList;
 import java.util.List;
-
 
 
 /**
@@ -12,6 +14,24 @@ import java.util.List;
  * Created on 8/12/20
  */
 public class Angles {
+
+    /**
+     * Constant by which to multiply an angular value in degrees to obtain an
+     * angular value in radians.
+     */
+    private static final double DEGREES_TO_RADIANS = 0.017453292519943295;
+
+    public static double tan(float angleInDegrees) {
+        return Math.tan(angleInDegrees * DEGREES_TO_RADIANS);
+    }
+
+    public static double sin(float angleInDegrees) {
+        return Math.sin(angleInDegrees * DEGREES_TO_RADIANS);
+    }
+
+    public static double cos(float angleInDegrees) {
+        return Math.cos(angleInDegrees * DEGREES_TO_RADIANS);
+    }
 
     public static Quadrant determineQuadrant(float angle) {
         if (angle < 0) throw new IllegalArgumentException("angle needs to be 0-359");
@@ -52,7 +72,6 @@ public class Angles {
         return null;
     }
 
-
     /**
      * this will compute a number of tangents based on an angle and an originX value.
      * <p>
@@ -74,7 +93,7 @@ public class Angles {
 
         List<Float> points = new ArrayList<>();
 
-        double tan = Math.tan(Math.toRadians(angle));
+        double tan = tan(angle);
 
         float y;
         // compute first point!
@@ -101,6 +120,7 @@ public class Angles {
         return points;
     }
 
+
     /**
      * this will compute a number of tangents based on an angle and an originX value.
      * <p>
@@ -122,7 +142,7 @@ public class Angles {
 
         List<Float> points = new ArrayList<>();
 
-        double tan = Math.tan(Math.toRadians(90 - angle));
+        double tan = tan(90 - angle);
 
         float x;
         // compute first point!
@@ -182,8 +202,8 @@ public class Angles {
         if (angle == 0) return dy;
         if (angle == 90) return dx;
 
-        double cos = Math.cos(Math.toRadians(angle));
-        double sin = Math.sin(Math.toRadians(angle));
+        double cos = cos(angle);
+        double sin = sin(angle);
 
         double a = dy * cos;
         double b = dx * sin;
@@ -222,12 +242,11 @@ public class Angles {
      */
     public static float worldY(float worldAngle, float amount) {
         Quadrant q = determineQuadrant(worldAngle);
-        if(q == Quadrant.UP) return -amount;
-        if(q == Quadrant.DOWN) return amount;
-        if(q == Quadrant.RIGHT || q == Quadrant.LEFT) return 0;
+        if (q == Quadrant.UP) return -amount;
+        if (q == Quadrant.DOWN) return amount;
+        if (q == Quadrant.RIGHT || q == Quadrant.LEFT) return 0;
 
-        double cos = Math.cos(Math.toRadians(worldAngle));
-        return (float) -(cos * amount);
+        return (float) -(cos(worldAngle) * amount);
     }
 
 
@@ -241,12 +260,11 @@ public class Angles {
      */
     public static float worldX(float worldAngle, float amount) {
         Quadrant q = determineQuadrant(worldAngle);
-        if(q == Quadrant.RIGHT) return amount;
-        if(q == Quadrant.LEFT) return -amount;
-        if(q == Quadrant.UP || q == Quadrant.DOWN) return 0;
+        if (q == Quadrant.RIGHT) return amount;
+        if (q == Quadrant.LEFT) return -amount;
+        if (q == Quadrant.UP || q == Quadrant.DOWN) return 0;
 
-        double sin = Math.sin(Math.toRadians(worldAngle));
-        return (float) (sin * amount);
+        return (float) (sin(worldAngle) * amount);
     }
 
     /**

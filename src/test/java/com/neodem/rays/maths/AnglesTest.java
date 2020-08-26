@@ -1,5 +1,6 @@
-package com.neodem.rays;
+package com.neodem.rays.maths;
 
+import com.neodem.rays.maths.Angles;
 import org.assertj.core.data.Offset;
 import org.junit.Test;
 

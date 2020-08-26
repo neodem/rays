@@ -3,6 +3,8 @@ package com.neodem.rays;
 import com.neodem.rays.graphics.ActiveCanvas;
 import com.neodem.rays.graphics.Color;
 import com.neodem.rays.graphics.Paintable;
+import com.neodem.rays.maths.Angles;
+import com.neodem.rays.maths.Rays;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -30,7 +32,6 @@ public class RaysCanvas extends ActiveCanvas {
     private final int screenH;
     private final int screenHMid;
 
-    private final RayComputer rayComputer;
     private final WorldMap worldMap;
 
     // the walls
@@ -64,8 +65,6 @@ public class RaysCanvas extends ActiveCanvas {
         worldMap = new TestWorldMap();
         playerLocation = worldMap.getPlayerStart();
         playerViewAngle = worldMap.getPlayerStartAngle();
-
-        rayComputer = new RayComputer(screenW, VIEWPORT);
     }
 
     @Override
@@ -189,7 +188,7 @@ public class RaysCanvas extends ActiveCanvas {
      * @param angle
      */
     private void movePlayer(float amount, float angle) {
-        logger.info("move player {} at {}", amount, angle);
+        logger.debug("move player {} at {}", amount, angle);
 
         float y = Angles.worldY(angle, amount);
         float x = Angles.worldX(angle, amount);
@@ -214,7 +213,7 @@ public class RaysCanvas extends ActiveCanvas {
         }
 
         // compute the rays for the players view. These will be in order from 0-ScreenW
-        List<Ray> rays = rayComputer.computeRays(playerLocation, playerViewAngle);
+        List<Ray> rays = Rays.computeRays(screenW, VIEWPORT, playerLocation, playerViewAngle);
 
         columns.clear();
         int i = 0;
