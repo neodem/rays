@@ -20,6 +20,9 @@ public class RaysCanvas extends ActiveCanvas {
 
     private static final Logger logger = LoggerFactory.getLogger(RaysCanvas.class);
 
+    // field of view (in degrees)
+    private static final int VIEWPORT = 90;
+
     private static final float DELTA_MOVE = 0.05f;
     private static final float DELTA_TURN = 5;
 
@@ -27,20 +30,16 @@ public class RaysCanvas extends ActiveCanvas {
     private final int screenH;
     private final int screenHMid;
 
-    // field of view (in degrees)
-    private static final int VIEWPORT = 90;
+    private final RayComputer rayComputer;
+    private final WorldMap worldMap;
 
     // the walls
-    protected List<Paintable> columns = new ArrayList<>();
+    private List<Paintable> columns = new ArrayList<>();
 
-    protected WorldMap worldMap;
-
-    protected FloatingPoint playerLocation;
+    private FloatingPoint playerLocation;
 
     // the direction the player is facing (0-359), 0 is up, 180 is down
-    protected float playerViewAngle;
-
-    private final RayComputer rayComputer;
+    private float playerViewAngle;
 
     private boolean viewChanged;
 
@@ -54,8 +53,6 @@ public class RaysCanvas extends ActiveCanvas {
     private boolean key_d = false;
     private boolean key_r = false;
 
-    private final boolean debug;
-
     public RaysCanvas(int width, int height, WallImage[] wallImages) {
         super(new Dimension(width, height));
         this.screenW = width;
@@ -65,14 +62,10 @@ public class RaysCanvas extends ActiveCanvas {
         this.wallImages = wallImages;
 
         worldMap = new TestWorldMap();
-
-        playerLocation = new FloatingPoint(7.5f, 13.8f);
-        playerViewAngle = 0;
+        playerLocation = worldMap.getPlayerStart();
+        playerViewAngle = worldMap.getPlayerStartAngle();
 
         rayComputer = new RayComputer(screenW, VIEWPORT);
-        if (logger.isDebugEnabled())
-            this.debug = true;
-        else this.debug = false;
     }
 
     @Override
@@ -131,13 +124,13 @@ public class RaysCanvas extends ActiveCanvas {
 
         // draw the walls
         for (Paintable c : columns) {
-//            if (logger.isDebugEnabled()) {
-//                logger.debug("drawing: " + r);
-//            }
+            if (logger.isDebugEnabled()) {
+                logger.debug("drawing: " + c);
+            }
             c.paint(g);
         }
 
-        if (debug) {
+        if (logger.isDebugEnabled()) {
             drawDebugGrid(g);
         }
     }
@@ -171,8 +164,8 @@ public class RaysCanvas extends ActiveCanvas {
 
         // reset location
         if (key_r) {
-            playerLocation = new FloatingPoint(7.5f, 13.8f);
-            playerViewAngle = 0;
+            playerLocation = worldMap.getPlayerStart();
+            playerViewAngle = worldMap.getPlayerStartAngle();
             viewChanged = true;
             logPlayer();
         }

@@ -55,5 +55,8 @@ public class TestWorldMap extends WorldMap {
         // hall 3
         addWalls(ElementType.HWALL,  4, 12, 2);
         addWalls(ElementType.HWALL,  3, 13, 4);
+
+        setPlayerStart(new FloatingPoint(7.5f, 13.8f));
+        setPlayerStartAngle(0);
     }
 }

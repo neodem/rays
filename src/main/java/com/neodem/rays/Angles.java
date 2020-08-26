@@ -226,13 +226,8 @@ public class Angles {
         if(q == Quadrant.DOWN) return amount;
         if(q == Quadrant.RIGHT || q == Quadrant.LEFT) return 0;
 
-        double sin = Math.sin(Math.toRadians(worldAngle));
-
-        if(q == Quadrant.UP_RIGHT) return (float) -(sin * amount);
-        if(q == Quadrant.DOWN_RIGHT) return (float) (sin * amount);
-        if(q == Quadrant.UP_LEFT) return (float) (sin * amount);
-
-        return (float) -(sin * amount);
+        double cos = Math.cos(Math.toRadians(worldAngle));
+        return (float) -(cos * amount);
     }
 
 
@@ -250,16 +245,9 @@ public class Angles {
         if(q == Quadrant.LEFT) return -amount;
         if(q == Quadrant.UP || q == Quadrant.DOWN) return 0;
 
-        double cos = Math.cos(Math.toRadians(worldAngle));
-
-        if(q == Quadrant.UP_RIGHT) return (float) (cos * amount);
-        if(q == Quadrant.DOWN_RIGHT) return (float) (-cos * amount);
-        if(q == Quadrant.UP_LEFT) return (float) (-cos * amount);
-
-        return (float) (cos * amount);
+        double sin = Math.sin(Math.toRadians(worldAngle));
+        return (float) (sin * amount);
     }
-
-
 
     /**
      * convert from an absolute angle (like 22 degrees) to a world angle relative to the playerViewAngle to the "left" or counter-clockwise

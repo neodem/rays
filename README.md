@@ -19,5 +19,4 @@ java -classpath {DEVHOME}/rays/target/classes:{M2RePo}/org/apache/commons/common
 --- 
 #TODO
 
-- Fix movement! Right now it doesn't track as expected when we are off axis
 - Don't allow a player to walk through walls

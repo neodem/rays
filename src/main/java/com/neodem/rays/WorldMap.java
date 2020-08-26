@@ -31,13 +31,15 @@ public class WorldMap {
 
     private static final Logger logger = LoggerFactory.getLogger(WorldMap.class);
 
-
     public enum ElementType {
         VWALL, HWALL
     }
 
     private final int mapWidth;
     private final int mapHeight;
+
+    private FloatingPoint playerStart;
+    private float playerStartAngle;
 
     private final Map<ElementType, Collection<Point>> data = new HashMap<>();
 
@@ -239,5 +241,29 @@ public class WorldMap {
 
     public void clearElements(ElementType elementType) {
         data.put(elementType, new HashSet<>());
+    }
+
+    protected void setPlayerStart(FloatingPoint playerStart) {
+        this.playerStart = playerStart;
+    }
+
+    protected void setPlayerStartAngle(float playerStartAngle) {
+        this.playerStartAngle = playerStartAngle;
+    }
+
+    public int getMapWidth() {
+        return mapWidth;
+    }
+
+    public int getMapHeight() {
+        return mapHeight;
+    }
+
+    public FloatingPoint getPlayerStart() {
+        return playerStart;
+    }
+
+    public float getPlayerStartAngle() {
+        return playerStartAngle;
     }
 }
